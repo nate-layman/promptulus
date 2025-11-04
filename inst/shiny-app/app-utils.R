@@ -123,8 +123,14 @@ call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-previe
 
   if (api_key == "" || grepl("^sk-test", api_key) || grepl("^sk-your", api_key)) {
     # Demo mode - return mock response
-    return(get_demo_response(user_message))
+    cat("     🎮 DEMO MODE - Using mock response\n")
+    response <- get_demo_response(user_message)
+    cat("     ✅ Demo response generated\n")
+    return(response)
   }
+
+  cat("     🤖 LIVE MODE - Calling OpenAI API\n")
+  cat("     📤 Sending to model: ", model, "\n")
 
   tryCatch({
     response <- openai::create_chat_completion(
@@ -138,12 +144,16 @@ call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-previe
     )
 
     if (is.null(response) || is.null(response$choices)) {
+      cat("     ❌ No response from API\n")
       return("Error: No response from OpenAI API")
     }
 
-    response$choices[[1]]$message$content
+    content <- response$choices[[1]]$message$content
+    cat("     ✅ API response received successfully\n")
+    return(content)
   }, error = function(e) {
-    glue("Error calling API: {e$message}. Make sure you have set a valid OPENAI_API_KEY in your .env file.")
+    cat("     ❌ API ERROR: ", e$message, "\n")
+    return(glue("Error calling API: {e$message}. Make sure you have set a valid OPENAI_API_KEY in your .env file."))
   })
 }
 

@@ -17,14 +17,25 @@ server <- function(input, output, session) {
 
   # Check API key on startup
   observe({
+    cat("\n🚀 ════════════════════════════════════════════════════════════\n")
+    cat("📱 Promptulus App Initialized\n")
+    cat("════════════════════════════════════════════════════════════\n\n")
+
     api_key <- Sys.getenv("OPENAI_API_KEY")
+    cat("🔑 Checking API key...\n")
+
     is_valid_key <- api_key != "" && !grepl("^sk-test", api_key) && !grepl("^sk-your", api_key)
 
     if (is_valid_key) {
       session_state$api_key_valid <- TRUE
+      cat("✅ Valid OpenAI API key found\n")
+      cat("🤖 Using LIVE MODE - Real GPT-4 responses\n\n")
       showNotification("✓ API key configured and ready!", type = "message", duration = 3)
     } else {
       session_state$api_key_valid <- TRUE  # Allow demo mode
+      cat("ℹ️  No valid API key detected\n")
+      cat("🎮 Using DEMO MODE - Example responses\n")
+      cat("📌 To use live API: Set OPENAI_API_KEY in .env file\n\n")
       showNotification(
         "🎮 Running in DEMO MODE - Click 'Ask the Genie' to see example responses!",
         type = "warning",
@@ -35,25 +46,36 @@ server <- function(input, output, session) {
 
   # Handle prompt submission
   observeEvent(input$submit_prompt, {
+    cat("\n✨ ════════════════════════════════════════════════════════════\n")
+    cat("🧞 BUTTON CLICKED - Starting Promptulus workflow\n")
+    cat("════════════════════════════════════════════════════════════\n\n")
+
     prompt <- trimws(input$user_prompt)
+    cat("📝 User prompt received:\n")
+    cat("   ", prompt, "\n\n")
 
     if (nchar(prompt) == 0) {
+      cat("⚠️  ERROR: Prompt is empty!\n\n")
       showNotification("Please enter a prompt first!", type = "warning")
       return()
     }
 
-
     session_state$current_prompt <- prompt
 
     # Show loading states
+    cat("⏳ Showing loading indicators...\n\n")
     shinyjs::show("genie_loading")
     shinyjs::hide("genie_content")
     shinyjs::show("coach_loading")
     shinyjs::hide("coach_content")
 
     # Call Genie
+    cat("🧞 Calling Genie model...\n")
     tryCatch({
       session_state$genie_response <- call_genie(prompt)
+
+      cat("✅ Genie response received:\n")
+      cat("   ", substring(session_state$genie_response, 1, 100), "...\n\n")
 
       output$genie_response <- renderUI({
         div(
@@ -69,9 +91,12 @@ server <- function(input, output, session) {
         )
       })
 
+      cat("✅ Genie response rendered in UI\n\n")
       shinyjs::hide("genie_loading")
       shinyjs::show("genie_content")
     }, error = function(e) {
+      cat("❌ ERROR from Genie:\n")
+      cat("   ", e$message, "\n\n")
       output$genie_response <- renderUI({
         div(
           class = "alert alert-danger",
@@ -84,8 +109,12 @@ server <- function(input, output, session) {
     })
 
     # Call Coach
+    cat("📚 Calling Coach model...\n")
     tryCatch({
       session_state$coach_response <- call_coach(prompt, session_state$genie_response)
+
+      cat("✅ Coach response received:\n")
+      cat("   ", substring(session_state$coach_response, 1, 100), "...\n\n")
 
       output$coach_response <- renderUI({
         div(
@@ -101,9 +130,12 @@ server <- function(input, output, session) {
         )
       })
 
+      cat("✅ Coach response rendered in UI\n\n")
       shinyjs::hide("coach_loading")
       shinyjs::show("coach_content")
     }, error = function(e) {
+      cat("❌ ERROR from Coach:\n")
+      cat("   ", e$message, "\n\n")
       output$coach_response <- renderUI({
         div(
           class = "alert alert-danger",
