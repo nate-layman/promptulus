@@ -54,45 +54,50 @@ ui <- page_navbar(
           "💡 Tip: Start with a simple prompt and watch how the Genie playfully ",
           "misinterprets it. Then use the Coach's feedback to improve it!",
           class = "text-muted small"
-        ),
+        )
       ),
-      main = navset_card_tab(
-        title = "Feedback",
-        nav_panel(
-          title = "🧞 Genie's Misinterpretation",
-          div(
-            id = "genie_container",
+      main = div(
+        tags$style(HTML("
+          .card-header { border-radius: 0.75rem 0.75rem 0 0; }
+          .tab-content { padding: 1.5rem; }
+        ")),
+        navset_card_tab(
+          nav_panel(
+            title = "🧞 Genie's Misinterpretation",
             div(
-              id = "genie_loading",
-              class = "text-center py-5",
-              style = "display: none;",
-              p("🧞 The Genie is conjuring a response...", class = "text-muted")
-            ),
-            div(
-              id = "genie_content",
-              uiOutput("genie_response")
+              id = "genie_container",
+              div(
+                id = "genie_loading",
+                class = "text-center py-5",
+                style = "display: none;",
+                p("🧞 The Genie is conjuring a response...", class = "text-muted")
+              ),
+              div(
+                id = "genie_content",
+                uiOutput("genie_response")
+              )
             )
-          )
-        ),
-        nav_panel(
-          title = "📚 Coach Feedback",
-          div(
-            id = "coach_container",
+          ),
+          nav_panel(
+            title = "📚 Coach Feedback",
             div(
-              id = "coach_loading",
-              class = "text-center py-5",
-              style = "display: none;",
-              p("📚 The Coach is preparing feedback...", class = "text-muted")
-            ),
-            div(
-              id = "coach_content",
-              uiOutput("coach_response")
+              id = "coach_container",
+              div(
+                id = "coach_loading",
+                class = "text-center py-5",
+                style = "display: none;",
+                p("📚 The Coach is preparing feedback...", class = "text-muted")
+              ),
+              div(
+                id = "coach_content",
+                uiOutput("coach_response")
+              )
             )
+          ),
+          nav_panel(
+            title = "📖 Learn Techniques",
+            uiOutput("techniques_panel")
           )
-        ),
-        nav_panel(
-          title = "📖 Learn Techniques",
-          uiOutput("techniques_panel")
         )
       )
     )
@@ -115,7 +120,7 @@ ui <- page_navbar(
         h5("About Promptulus"),
         p("Promptulus teaches you to write better AI prompts through playful interaction and constructive coaching.")
       ),
-      main = page_fill(
+      main = page_fillable(
         card(
           h2("What is Promptulus?"),
           p(

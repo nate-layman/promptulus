@@ -1,6 +1,8 @@
 library(shiny)
 library(shinyjs)
-library(promptulus)
+
+# Load app utilities
+source("app-utils.R")
 
 server <- function(input, output, session) {
 
@@ -9,23 +11,24 @@ server <- function(input, output, session) {
     current_prompt = "",
     genie_response = NULL,
     coach_response = NULL,
-    api_client = NULL,
-    history = list(),
-    initialized = FALSE
+    api_key_valid = FALSE,
+    history = list()
   )
 
-  # Initialize API client on session start
+  # Check API key on startup
   observe({
-    tryCatch({
-      session_state$api_client <- init_api_client()
-      session_state$initialized <- TRUE
-    }, error = function(e) {
+    api_key <- Sys.getenv("OPENAI_API_KEY")
+    if (api_key != "") {
+      session_state$api_key_valid <- TRUE
+      showNotification("✓ API key configured", type = "message", duration = 3)
+    } else {
+      session_state$api_key_valid <- FALSE
       showNotification(
-        paste("Error initializing API client:", e$message),
-        type = "error",
+        "⚠️  OPENAI_API_KEY not set. Set it in your .env file or environment variable.",
+        type = "warning",
         duration = NULL
       )
-    })
+    }
   })
 
   # Handle prompt submission
@@ -37,8 +40,8 @@ server <- function(input, output, session) {
       return()
     }
 
-    if (!session_state$initialized) {
-      showNotification("API client is still initializing. Please wait...", type = "warning")
+    if (!session_state$api_key_valid) {
+      showNotification("API key not configured. Please set OPENAI_API_KEY.", type = "error")
       return()
     }
 
@@ -52,9 +55,8 @@ server <- function(input, output, session) {
 
     # Call Genie
     tryCatch({
-      session_state$genie_response <- call_genie(prompt, session_state$api_client)
+      session_state$genie_response <- call_genie(prompt)
 
-      # Render Genie response
       output$genie_response <- renderUI({
         div(
           class = "card border-primary",
@@ -85,13 +87,8 @@ server <- function(input, output, session) {
 
     # Call Coach
     tryCatch({
-      session_state$coach_response <- call_coach(
-        prompt,
-        session_state$genie_response,
-        session_state$api_client
-      )
+      session_state$coach_response <- call_coach(prompt, session_state$genie_response)
 
-      # Render Coach response
       output$coach_response <- renderUI({
         div(
           class = "card border-success",
@@ -135,25 +132,30 @@ server <- function(input, output, session) {
 
     technique_cards <- lapply(names(techniques), function(id) {
       tech <- techniques[[id]]
-      card(
-        full_screen = TRUE,
-        class = "mb-3",
-        h4(tech$name),
-        p(
-          strong("What it is:"), " ", tech$description,
-          class = "mb-2"
+      div(
+        class = "card mb-3 border-primary",
+        div(
+          class = "card-header bg-primary text-white",
+          h5(tech$name)
         ),
-        p(
-          strong("Why it matters:"), " ", tech$why_matters,
-          class = "mb-2"
-        ),
-        p(
-          strong("Example:"), " ", em(tech$example),
-          class = "mb-2"
-        ),
-        p(
-          strong("Genie's trick:"), " ", tech$genie_misapplication,
-          class = "text-muted small"
+        div(
+          class = "card-body",
+          p(
+            strong("What it is:"), " ", tech$description,
+            class = "mb-2"
+          ),
+          p(
+            strong("Why it matters:"), " ", tech$why_matters,
+            class = "mb-2"
+          ),
+          p(
+            strong("Example:"), " ", em(tech$example),
+            class = "mb-2"
+          ),
+          p(
+            strong("Genie's trick:"), " ", tech$genie_misapplication,
+            class = "text-muted small"
+          )
         )
       )
     })
@@ -161,12 +163,12 @@ server <- function(input, output, session) {
     div(
       h2("10 Core Prompting Techniques"),
       p("Here are all the techniques Promptulus teaches. Learn what they do and why they matter!"),
-      layout_columns(
-        col_widths = c(6, 6, 6, 6, 6),
-        !!!technique_cards
+      div(
+        class = "row",
+        lapply(technique_cards, function(card) {
+          div(class = "col-md-6", card)
+        })
       )
     )
   })
 }
-
-# Server logic is complete and integrates with promptulus package functions
