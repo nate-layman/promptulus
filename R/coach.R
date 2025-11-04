@@ -62,7 +62,7 @@ Remember: Your goal is to teach and guide, not to do the work for them!
 #'
 #' @param user_prompt The user's prompt to analyze
 #' @param genie_response The Genie's playful misinterpretation (for context)
-#' @param client An ellmer chat client
+#' @param client An OpenAI API client configuration
 #'
 #' @return The Coach's constructive feedback
 #' @keywords internal
@@ -88,23 +88,7 @@ Now provide your coaching feedback using the format specified in your system pro
 Help the user understand what techniques could improve their prompt."
   )
 
-  tryCatch({
-    response <- client$chat(
-      messages = list(
-        list(role = "system", content = system_prompt),
-        list(role = "user", content = coach_message)
-      )
-    )
-
-    # Extract the text from the response
-    if (is.list(response) && !is.null(response$content)) {
-      return(response$content)
-    } else {
-      return(as.character(response))
-    }
-  }, error = function(e) {
-    return(glue::glue("Oh no! The Coach hit a snag: {e$message}"))
-  })
+  call_openai_api(system_prompt, coach_message, client$model)
 }
 
 #' Process and format Coach feedback

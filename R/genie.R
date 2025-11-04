@@ -53,7 +53,7 @@ Remember: You're teaching through humor and intentional misinterpretation!
 #' Call the Genie model
 #'
 #' @param user_prompt The user's prompt to misinterpret
-#' @param client An ellmer chat client
+#' @param client An OpenAI API client configuration
 #'
 #' @return The Genie's playful misinterpretation
 #' @keywords internal
@@ -65,24 +65,9 @@ call_genie <- function(user_prompt, client) {
   tech_string <- paste(tech_descriptions, collapse = "\n")
 
   system_prompt <- get_genie_system_prompt(tech_string)
+  user_message <- glue::glue("Please misinterpret this prompt: \"{user_prompt}\"")
 
-  tryCatch({
-    response <- client$chat(
-      messages = list(
-        list(role = "system", content = system_prompt),
-        list(role = "user", content = glue::glue("Please misinterpret this prompt: \"{user_prompt}\""))
-      )
-    )
-
-    # Extract the text from the response
-    if (is.list(response) && !is.null(response$content)) {
-      return(response$content)
-    } else {
-      return(as.character(response))
-    }
-  }, error = function(e) {
-    return(glue::glue("Oh no! 🧞 The magic fizzled: {e$message}"))
-  })
+  call_openai_api(system_prompt, user_message, client$model)
 }
 
 #' Analyze prompt for missing techniques (helper for Genie)

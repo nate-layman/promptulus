@@ -4,9 +4,9 @@
 
 #' Initialize OpenAI API Client
 #'
-#' Creates and configures an ellmer chat client for OpenAI
+#' Creates and configures an OpenAI API client using the openai package
 #'
-#' @return An ellmer chat client object
+#' @return A list containing API configuration
 #' @keywords internal
 #' @export
 init_api_client <- function() {
@@ -20,30 +20,77 @@ init_api_client <- function() {
     )
   }
 
+  # Set the API key for the openai package
+  Sys.setenv(OPENAI_API_KEY = api_key)
+
   tryCatch({
-    # Create an OpenAI chat client
-    client <- ellmer::chat_openai(
-      api_key = api_key,
-      model = "gpt-4-turbo"
+    # Test connection with a simple call
+    response <- openai::create_chat_completion(
+      model = "gpt-4-turbo-preview",
+      messages = list(list(role = "user", content = "test")),
+      max_tokens = 5
     )
-    return(client)
+
+    if (is.null(response)) {
+      stop("Failed to connect to OpenAI API")
+    }
+
+    # Return a client object
+    list(
+      api_key = api_key,
+      model = "gpt-4-turbo-preview",
+      type = "openai"
+    )
   }, error = function(e) {
     stop("Failed to initialize API client: ", e$message)
   })
 }
 
+#' Make an API call to OpenAI
+#'
+#' @param system_prompt The system prompt for the AI
+#' @param user_message The user's message
+#' @param model The model to use (default: gpt-4-turbo-preview)
+#'
+#' @return The response text from OpenAI
+#' @keywords internal
+call_openai_api <- function(system_prompt, user_message, model = "gpt-4-turbo-preview") {
+  tryCatch({
+    response <- openai::create_chat_completion(
+      model = model,
+      messages = list(
+        list(role = "system", content = system_prompt),
+        list(role = "user", content = user_message)
+      ),
+      temperature = 0.7,
+      max_tokens = 1500
+    )
+
+    if (is.null(response) || is.null(response$choices)) {
+      return("Error: No response from API")
+    }
+
+    # Extract the message content
+    response$choices[[1]]$message$content
+  }, error = function(e) {
+    glue::glue("API Error: {e$message}")
+  })
+}
+
 #' Make a simple API call to test connection
 #'
-#' @param client An ellmer chat client
+#' @param client An OpenAI API client configuration
 #'
 #' @return TRUE if successful, FALSE otherwise
 #' @keywords internal
 test_api_connection <- function(client) {
   tryCatch({
-    response <- client$chat(
+    response <- openai::create_chat_completion(
+      model = client$model,
       messages = list(
-        list(role = "user", content = "Say 'OK'")
-      )
+        list(role = "user", content = "Say OK")
+      ),
+      max_tokens = 10
     )
     return(!is.null(response))
   }, error = function(e) {

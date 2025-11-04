@@ -13,10 +13,11 @@ Roxygen2: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
     shiny,
-    ellmer,
+    bslib,
+    shinyjs,
+    openai,
     jsonlite,
     glue
 Suggests:
     shinycssloaders,
-    bslib,
     testthat (>= 3.0.0)
