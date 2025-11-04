@@ -1,41 +1,54 @@
 #!/usr/bin/env Rscript
 
-# Simple app starter without devtools dependency
+# Promptulus Shiny App Launcher
+# Uses dotenv for clean environment variable management
 
 # Set CRAN mirror
 options(repos = c(CRAN = "https://cran.r-project.org"))
 
-# Load environment from .env file
-env_file <- file.path(getwd(), ".env")
-if (file.exists(env_file)) {
-  env_vars <- readLines(env_file)
-  for (line in env_vars) {
-    if (grepl("^#", line) || grepl("^\\s*$", line)) next
-    if (grepl("=", line)) {
-      parts <- strsplit(line, "=", fixed = TRUE)[[1]]
-      if (length(parts) == 2) {
-        key <- trimws(parts[1])
-        value <- trimws(parts[2])
-        Sys.setenv(key = value)
-      }
-    }
-  }
-  message("✓ Loaded environment variables from .env")
+message("🧞 Promptulus App Launcher\n")
+
+# Install dotenv if needed
+if (!require("dotenv", quietly = TRUE)) {
+  message("📦 Installing dotenv package...")
+  install.packages("dotenv", repos = "https://cran.r-project.org", quiet = TRUE)
 }
+
+# Load environment from .env file
+library(dotenv)
+load_dot_env(".env")
+
+message("✓ Environment loaded")
 
 # Check API key
 api_key <- Sys.getenv("OPENAI_API_KEY")
 if (api_key == "") {
   message("\n⚠️  OPENAI_API_KEY not set!")
-  message("Please create a .env file with: OPENAI_API_KEY=sk-your-key")
-  message("Or set it in R: Sys.setenv(OPENAI_API_KEY = 'sk-your-key')")
+  message("\nPlease set your OpenAI API key in one of these ways:\n")
+  message("  1. Create a .env file with:")
+  message("     OPENAI_API_KEY=sk-your-api-key-here\n")
+  message("  2. Or set it in R:")
+  message("     Sys.setenv(OPENAI_API_KEY = 'sk-your-api-key-here')\n")
+  message("Get your key from: https://platform.openai.com/account/api-keys\n")
   quit(status = 1)
 }
 
 message("✓ API key configured")
 
+# Verify required packages
+required_packages <- c("shiny", "bslib", "shinyjs", "openai", "jsonlite", "glue")
+missing_packages <- required_packages[!sapply(required_packages, require, character.only = TRUE)]
+
+if (length(missing_packages) > 0) {
+  message("\n📦 Installing missing packages: ", paste(missing_packages, collapse = ", "))
+  install.packages(missing_packages, repos = "https://cran.r-project.org", quiet = TRUE)
+  message("✓ Packages installed")
+}
+
 # Source and run the app
-message("\n🚀 Starting Promptulus...")
+message("\n🚀 Starting Promptulus at http://localhost:3838...")
+message("   (App will open in your default browser)\n")
+
 shiny::runApp(
   appDir = "inst/shiny-app",
   host = "127.0.0.1",

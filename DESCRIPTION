@@ -17,7 +17,8 @@ Imports:
     shinyjs,
     openai,
     jsonlite,
-    glue
+    glue,
+    dotenv
 Suggests:
     shinycssloaders,
     testthat (>= 3.0.0)
