@@ -18,13 +18,15 @@ server <- function(input, output, session) {
   # Check API key on startup
   observe({
     api_key <- Sys.getenv("OPENAI_API_KEY")
-    if (api_key != "") {
+    is_valid_key <- api_key != "" && !grepl("^sk-test", api_key) && !grepl("^sk-your", api_key)
+
+    if (is_valid_key) {
       session_state$api_key_valid <- TRUE
-      showNotification("✓ API key configured", type = "message", duration = 3)
+      showNotification("✓ API key configured and ready!", type = "message", duration = 3)
     } else {
-      session_state$api_key_valid <- FALSE
+      session_state$api_key_valid <- TRUE  # Allow demo mode
       showNotification(
-        "⚠️  OPENAI_API_KEY not set. Set it in your .env file or environment variable.",
+        "🎮 Running in DEMO MODE - Click 'Ask the Genie' to see example responses!",
         type = "warning",
         duration = NULL
       )
@@ -40,10 +42,6 @@ server <- function(input, output, session) {
       return()
     }
 
-    if (!session_state$api_key_valid) {
-      showNotification("API key not configured. Please set OPENAI_API_KEY.", type = "error")
-      return()
-    }
 
     session_state$current_prompt <- prompt
 

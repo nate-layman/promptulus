@@ -118,6 +118,14 @@ get_technique <- function(id) {
 # ============================================================================
 
 call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-preview") {
+  # Check if API key is set
+  api_key <- Sys.getenv("OPENAI_API_KEY")
+
+  if (api_key == "" || grepl("^sk-test", api_key) || grepl("^sk-your", api_key)) {
+    # Demo mode - return mock response
+    return(get_demo_response(user_message))
+  }
+
   tryCatch({
     response <- openai::create_chat_completion(
       model = model,
@@ -135,8 +143,40 @@ call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-previe
 
     response$choices[[1]]$message$content
   }, error = function(e) {
-    glue("Error: {e$message}")
+    glue("Error calling API: {e$message}. Make sure you have set a valid OPENAI_API_KEY in your .env file.")
   })
+}
+
+# Demo response generator
+get_demo_response <- function(user_message) {
+  if (grepl("misinterpret", tolower(user_message), fixed = TRUE)) {
+    # Genie response
+    return(
+      "🧞 OH! So you want a story about a robot? OBVIOUSLY you meant an 847-page epic \
+poem about the philosophical implications of artificial consciousness, written entirely \
+in rhyming couplets! And naturally it should be in ancient Sanskrit. Here goes...\n\n\
+*waves wand mysteriously* Perhaps if you had been more specific about OUTPUT FORMAT, \
+CONSTRAINTS, and CONTEXT..."
+    )
+  } else {
+    # Coach response
+    return(
+      "## 🔍 What Could Be Improved\n\
+- The prompt lacks a specific output format\n\
+- No constraints on length or style\n\
+- Missing audience definition\n\n\
+## 🛠️ Technique: Clarify Output Format\n\n\
+## 📘 How This Technique Works\n\
+Specifying the output format (bullet points, paragraphs, tables, etc.) helps the AI \
+understand exactly how you want your information structured. Without this, you might \
+get a dense paragraph when you needed a bulleted list.\n\n\
+## ✍️ How You Might Apply It\n\
+Instead of 'Write a story about a robot', try: 'Write a SHORT story (500 words) about \
+a robot, formatted as three chapters with chapter headings.'\n\n\
+## 💡 Next Steps\n\
+Try adding ONE constraint to your prompt and ask again!"
+    )
+  }
 }
 
 # ============================================================================
