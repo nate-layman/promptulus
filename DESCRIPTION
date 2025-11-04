@@ -1,0 +1,22 @@
+Package: promptulus
+Title: AI Prompting Learning Game
+Version: 0.1.0
+Authors@R:
+    person("Promptulus", "Team", email = "dev@promptulus.local", role = c("aut", "cre"))
+Description: An interactive chatbot that teaches users how to write better AI
+    prompts using a playful Genie personality that misinterprets prompts and
+    a helpful Prompt Coach that provides constructive feedback.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen2: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    shiny,
+    ellmer,
+    jsonlite,
+    glue
+Suggests:
+    shinycssloaders,
+    bslib,
+    testthat (>= 3.0.0)

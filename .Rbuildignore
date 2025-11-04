@@ -1,0 +1,11 @@
+^\.git$
+^\.github$
+^\.gitignore$
+^\.Rproj.user$
+^\.Rproject$
+^promptulus\.Rproj$
+^README\.md$
+^CONTRIBUTING\.md$
+^CODE_OF_CONDUCT\.md$
+^\.env$
+^\.env\.local$
