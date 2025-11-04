@@ -143,7 +143,7 @@ call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-previe
       max_tokens = 1500
     )
 
-    cat("     📦 Response type: ", class(response), "\n")
+    cat("     📦 Response type: ", paste(class(response), collapse = ", "), "\n")
 
     # Handle different response structures
     if (is.character(response)) {
@@ -151,36 +151,64 @@ call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-previe
       cat("     ✅ API response received (string format)\n")
       return(response)
     } else if (is.list(response)) {
+      # Debug: show structure
+      cat("     📋 Response names: ", paste(names(response), collapse = ", "), "\n")
+
       # Try different ways to extract content
-      if (!is.null(response$choices)) {
-        content <- response$choices[[1]]$message$content
-        cat("     ✅ API response received (list format)\n")
-        return(content)
-      } else if (!is.null(response$message)) {
-        content <- response$message$content
-        cat("     ✅ API response received (alt format 1)\n")
-        return(content)
-      } else if (!is.null(response$content)) {
-        cat("     ✅ API response received (alt format 2)\n")
-        return(response$content)
-      } else {
-        # Last resort: convert to JSON and look for content
-        cat("     ⚠️  Trying JSON parsing\n")
+      if (!is.null(response$choices) && is.list(response$choices)) {
         tryCatch({
-          json_str <- jsonlite::toJSON(response)
-          cat("     📊 Response structure: ", substr(json_str, 1, 100), "...\n")
-          return("Error: Could not parse API response structure")
-        }, error = function(e2) {
-          return(glue("Error parsing response: {e2$message}"))
+          content <- response$choices[[1]]$message$content
+          cat("     ✅ API response received (choices format)\n")
+          return(content)
+        }, error = function(e_inner) {
+          cat("     ⚠️  Could not extract from choices: ", e_inner$message, "\n")
+          NULL
         })
       }
+
+      if (!is.null(response$message)) {
+        tryCatch({
+          if (is.list(response$message)) {
+            content <- response$message$content
+          } else {
+            content <- response$message
+          }
+          cat("     ✅ API response received (message format)\n")
+          return(content)
+        }, error = function(e_inner) {
+          cat("     ⚠️  Could not extract from message: ", e_inner$message, "\n")
+          NULL
+        })
+      }
+
+      if (!is.null(response$content)) {
+        cat("     ✅ API response received (content format)\n")
+        return(response$content)
+      }
+
+      # Last resort: try to convert to string
+      tryCatch({
+        response_str <- as.character(response)
+        if (length(response_str) > 0 && nchar(response_str[1]) > 0) {
+          cat("     ✅ API response received (string coercion)\n")
+          return(response_str[1])
+        }
+      }, error = function(e_inner) {
+        NULL
+      })
+
+      # If all else fails, dump structure for debugging
+      cat("     ❌ Could not extract content from response\n")
+      cat("     📊 Full structure:\n")
+      str(response, max.level = 2)
+      return("Error: Could not parse API response structure. Check console for details.")
     } else {
       cat("     ⚠️  Unexpected response type\n")
-      return(glue("Unexpected response type: {class(response)}"))
+      return(glue("Unexpected response type: {paste(class(response), collapse = ', ')}"))
     }
   }, error = function(e) {
     cat("     ❌ API ERROR: ", e$message, "\n")
-    cat("     📍 Error occurred at: ", e$call, "\n")
+    # Don't try to cat the call object as it's a language object
     return(glue("Error calling API: {e$message}. Make sure you have set a valid OPENAI_API_KEY in your .env file."))
   })
 }
