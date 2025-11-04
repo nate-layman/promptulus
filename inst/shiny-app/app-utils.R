@@ -155,15 +155,40 @@ call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-previe
       cat("     📋 Response names: ", paste(names(response), collapse = ", "), "\n")
 
       # Try different ways to extract content
-      if (!is.null(response$choices) && is.list(response$choices)) {
-        tryCatch({
-          content <- response$choices[[1]]$message$content
-          cat("     ✅ API response received (choices format)\n")
-          return(content)
-        }, error = function(e_inner) {
-          cat("     ⚠️  Could not extract from choices: ", e_inner$message, "\n")
-          NULL
-        })
+      if (!is.null(response$choices)) {
+        cat("     🔍 Choices class: ", paste(class(response$choices), collapse = ", "), "\n")
+
+        # Check if it's a data frame (tibble from API)
+        if (is.data.frame(response$choices)) {
+          cat("     📊 Choices is a data frame with cols: ", paste(names(response$choices), collapse = ", "), "\n")
+          tryCatch({
+            # Try to extract message.content
+            if ("message.content" %in% names(response$choices)) {
+              content <- response$choices$message.content[1]
+              cat("     ✅ API response received (from message.content column)\n")
+              return(content)
+            } else if ("message" %in% names(response$choices)) {
+              content <- response$choices$message[1]
+              cat("     ✅ API response received (from message column)\n")
+              return(content)
+            }
+          }, error = function(e_inner) {
+            cat("     ⚠️  Error extracting from data frame: ", e_inner$message, "\n")
+            NULL
+          })
+        }
+
+        # Check if it's a list
+        if (is.list(response$choices)) {
+          tryCatch({
+            content <- response$choices[[1]]$message$content
+            cat("     ✅ API response received (from choices list)\n")
+            return(content)
+          }, error = function(e_inner) {
+            cat("     ⚠️  Could not extract from choices list: ", e_inner$message, "\n")
+            NULL
+          })
+        }
       }
 
       if (!is.null(response$message)) {
