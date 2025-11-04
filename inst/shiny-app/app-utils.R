@@ -161,16 +161,35 @@ call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-previe
         # Check if it's a data frame (tibble from API)
         if (is.data.frame(response$choices)) {
           cat("     📊 Choices is a data frame with cols: ", paste(names(response$choices), collapse = ", "), "\n")
+          cat("     📊 First row structure:\n")
+          cat("        ", paste(capture.output(str(response$choices[1, ])), collapse = "\n        "), "\n")
+
           tryCatch({
             # Try to extract message.content
             if ("message.content" %in% names(response$choices)) {
               content <- response$choices$message.content[1]
-              cat("     ✅ API response received (from message.content column)\n")
+              cat("     ✅ Extracted from message.content column\n")
+              cat("     📄 Content preview: ", substring(as.character(content), 1, 80), "...\n")
               return(content)
             } else if ("message" %in% names(response$choices)) {
-              content <- response$choices$message[1]
-              cat("     ✅ API response received (from message column)\n")
+              # message column might be a list/nested
+              msg <- response$choices$message[1]
+              cat("     📬 Message class: ", class(msg), "\n")
+
+              if (is.list(msg)) {
+                content <- msg[[1]]$content
+              } else if (is.data.frame(msg)) {
+                content <- msg$content[1]
+              } else {
+                content <- msg
+              }
+
+              cat("     ✅ Extracted from message column\n")
+              cat("     📄 Content preview: ", substring(as.character(content), 1, 80), "...\n")
               return(content)
+            } else {
+              cat("     ❌ Neither message.content nor message found\n")
+              cat("     📋 Available columns: ", paste(names(response$choices), collapse = ", "), "\n")
             }
           }, error = function(e_inner) {
             cat("     ⚠️  Error extracting from data frame: ", e_inner$message, "\n")
