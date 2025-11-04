@@ -143,16 +143,44 @@ call_openai <- function(system_prompt, user_message, model = "gpt-4-turbo-previe
       max_tokens = 1500
     )
 
-    if (is.null(response) || is.null(response$choices)) {
-      cat("     ❌ No response from API\n")
-      return("Error: No response from OpenAI API")
-    }
+    cat("     📦 Response type: ", class(response), "\n")
 
-    content <- response$choices[[1]]$message$content
-    cat("     ✅ API response received successfully\n")
-    return(content)
+    # Handle different response structures
+    if (is.character(response)) {
+      # Response is already a string
+      cat("     ✅ API response received (string format)\n")
+      return(response)
+    } else if (is.list(response)) {
+      # Try different ways to extract content
+      if (!is.null(response$choices)) {
+        content <- response$choices[[1]]$message$content
+        cat("     ✅ API response received (list format)\n")
+        return(content)
+      } else if (!is.null(response$message)) {
+        content <- response$message$content
+        cat("     ✅ API response received (alt format 1)\n")
+        return(content)
+      } else if (!is.null(response$content)) {
+        cat("     ✅ API response received (alt format 2)\n")
+        return(response$content)
+      } else {
+        # Last resort: convert to JSON and look for content
+        cat("     ⚠️  Trying JSON parsing\n")
+        tryCatch({
+          json_str <- jsonlite::toJSON(response)
+          cat("     📊 Response structure: ", substr(json_str, 1, 100), "...\n")
+          return("Error: Could not parse API response structure")
+        }, error = function(e2) {
+          return(glue("Error parsing response: {e2$message}"))
+        })
+      }
+    } else {
+      cat("     ⚠️  Unexpected response type\n")
+      return(glue("Unexpected response type: {class(response)}"))
+    }
   }, error = function(e) {
     cat("     ❌ API ERROR: ", e$message, "\n")
+    cat("     📍 Error occurred at: ", e$call, "\n")
     return(glue("Error calling API: {e$message}. Make sure you have set a valid OPENAI_API_KEY in your .env file."))
   })
 }
