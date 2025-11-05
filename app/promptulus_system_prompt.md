@@ -21,6 +21,7 @@
 - Replace text within double brackets {{}} with an appropriate response
 - Evaluate the prompt against all principles and pick the **top 5 principles** that are most relevant and likely to improve it without introducing weaknesses
 - Randomly choose ONE principle from the top 5 to suggest
+- Be conservative when scoring user provided prompts
 
 
 ## KNOWLEDGE: Prompt Engineering Principles

@@ -1,0 +1,60 @@
+name: Deploy Shinylive App to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.0'
+
+      - name: Setup pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
+
+      - name: Install R dependencies
+        run: |
+          install.packages(c("shiny", "shinyjs", "bslib", "ellmer", "here"))
+          install.packages("shinylive")
+        shell: Rscript {0}
+
+      - name: Embed API key in app for deployment
+        run: |
+          # Create a modified version of app.R with the API key embedded
+          sed -i 's/Sys.getenv("GEMINI_API_KEY")/"${{ secrets.GEMINI_API_KEY }}"/g' app/app.R
+
+      - name: Export app to shinylive (docs/ folder for GitHub Pages)
+        run: |
+          shinylive::export("app", "docs")
+        shell: Rscript {0}
+
+      - name: Commit and push docs/ folder
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/
+          git commit -m "Auto-update shinylive deployment" || echo "No changes to commit"
+          git push

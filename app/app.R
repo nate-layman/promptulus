@@ -201,15 +201,16 @@ server <- function(input, output, session) {
       # Show loading gear
       shinyjs::addClass(id = "loading_gear", class = "show")
 
-      # Call OpenAI API using ellmer
+      # Call Google Gemini API using ellmer
       tryCatch({
         cat("[LOG] Send button clicked\n")
 
-        api_key <- Sys.getenv("OPENAI_API_KEY")
+        api_key <- Sys.getenv("GEMINI_API_KEY")
 
         if (api_key == "") {
-          cat("[LOG] ERROR: OPENAI_API_KEY not set\n")
-          owl_text("Error: OPENAI_API_KEY not set in .env file")
+          cat("[LOG] ERROR: GEMINI_API_KEY not set\n")
+          owl_text("Error: GEMINI_API_KEY not set in .env file")
+          shinyjs::removeClass(id = "loading_gear", class = "show")
           return()
         }
 
@@ -231,11 +232,13 @@ server <- function(input, output, session) {
         cat(paste0("[LOG] System prompt created, length: ", nchar(system_prompt), " characters\n"))
         cat(paste0("[LOG] User prompt length: ", nchar(user_prompt), " characters\n"))
 
-        # Call OpenAI
+        # Call LLM using ellmer's generic chat() function
+        # To switch providers, just change the name parameter:
+        # "openai", "anthropic", "google_gemini", etc.
         cat("[LOG] Creating chat object with system prompt\n")
-        chat_obj <- chat_openai(
-          system_prompt,
-          model = "gpt-4-turbo",
+        chat_obj <- chat(
+          name = "google_gemini/gemini-2.5-flash",
+          system_prompt = system_prompt,
           api_key = api_key,
           echo = "none"
         )

@@ -1,1 +1,36 @@
+# Environment variables (API keys)
 .env
+
+# R and RStudio files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# R package files
+*.tar.gz
+*.zip
+
+# Old shinylive export directory (no longer used)
+site/
+
+# Note: docs/ is NOT ignored - it contains the deployed shinylive app for GitHub Pages
+
+# System files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
