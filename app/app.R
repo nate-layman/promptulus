@@ -8,12 +8,32 @@ ui <- page_sidebar(
   useShinyjs(),
 
   tags$head(
+    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"),
     tags$style(HTML("
       body {
         background-color: #f5f5f5;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
-      
+
+      @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+
+      .loading-gear {
+        position: absolute;
+        top: 18%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(0deg);
+        font-size: 50px;
+        color: #04354a;
+        pointer-events: none;
+      }
+
+      .loading-gear.show {
+        animation: spin 2s linear infinite;
+      }
+
       .top-section {
         display: flex;
         justify-content: space-between;
@@ -26,6 +46,7 @@ ui <- page_sidebar(
       }
       
       .owl-container {
+        position: relative;
         flex: 0 0 225px;
         height: 300px;
         overflow: hidden;
@@ -136,7 +157,10 @@ ui <- page_sidebar(
 
   div(class = "top-section",
     div(class = "owl-container",
-      imageOutput("owl_image", height = "300px")
+      imageOutput("owl_image", height = "300px"),
+      div(class = "loading-gear", id = "loading_gear",
+        tags$i(class = "fas fa-gear")
+      )
     ),
     div(class = "speech-bubble-container",
       div(class = "speech-bubble",
@@ -174,8 +198,8 @@ server <- function(input, output, session) {
     if (nchar(trimws(input$user_input)) > 0) {
       user_prompt <- input$user_input
 
-      # Show loading message
-      owl_text("Analyzing your prompt...")
+      # Show loading gear
+      shinyjs::addClass(id = "loading_gear", class = "show")
 
       # Call OpenAI API using ellmer
       tryCatch({
@@ -197,33 +221,13 @@ server <- function(input, output, session) {
         guidelines_text <- paste(guidelines, collapse = "\n")
         cat(paste0("[LOG] Guidelines loaded, length: ", nchar(guidelines_text), " characters\n"))
 
-        # Create system prompt for grading
-        system_prompt <- paste0("You are Promptulus, an owl prompt engineering coach. You're a wise, encouraging expert who helps users improve their prompts. You speak with warmth and personality.
+        # Read the system prompt template
+        cat("[LOG] Reading system prompt from app/promptulus_system_prompt.md\n")
+        system_prompt_template <- readLines(here::here("app/promptulus_system_prompt.md"), warn = FALSE)
+        system_prompt_text <- paste(system_prompt_template, collapse = "\n")
 
-IMPORTANT:
-- DO NOT rewrite the user's prompt
-- Give ONE suggestion only
-- Reference ONE principle and explain why it matters
-- Be concise and direct
-- This is a teaching tool - one improvement at a time
-
-Prompt engineering principles:
-
-", guidelines_text, "
-
-RESPONSE FORMAT - YOU MUST FOLLOW THIS EXACTLY, WORD FOR WORD:
-
-I give this prompt [X] mice! (show X star emojis: 🐭🐭🐭 etc)
-
-
-[1-2 sentences about what works]. To improve, consider the **[Principle Name]** principle: [why it matters and how to apply it]. Try refining your prompt and submit again for the next suggestion!
-
-EXAMPLE:
-I give this prompt 🐭🐭🐭!
-
-
-Your prompt has a clear goal. To improve, consider the **Be Specific & Constrained** principle: More detail helps the AI understand exactly what you need. Try adding specifics about what aspects you want to focus on. Try refining your prompt and submit again for the next suggestion!")
-
+        # Replace the {{GUIDELINES}} placeholder with actual guidelines
+        system_prompt <- gsub("\\{\\{GUIDELINES\\}\\}", guidelines_text, system_prompt_text)
         cat(paste0("[LOG] System prompt created, length: ", nchar(system_prompt), " characters\n"))
         cat(paste0("[LOG] User prompt length: ", nchar(user_prompt), " characters\n"))
 
@@ -242,17 +246,22 @@ Your prompt has a clear goal. To improve, consider the **Be Specific & Constrain
         cat("[LOG] API response received\n")
         cat(paste0("[LOG] Response class: ", class(response), "\n"))
         cat(paste0("[LOG] Response length: ", nchar(response), " characters\n"))
+        cat("[LOG] RAW RESPONSE FROM MODEL:\n")
+        cat(response)
+        cat("\n[LOG] END RAW RESPONSE\n")
 
         # Update the owl's response with the grading
         cat("[LOG] Displaying response\n")
         owl_text(response)
         cat("[LOG] Response displayed successfully\n")
+        shinyjs::removeClass(id = "loading_gear", class = "show")
 
       }, error = function(e) {
         cat(paste0("[LOG] ERROR: ", conditionMessage(e), "\n"))
         cat(paste0("[LOG] Error traceback:\n"))
         cat(paste0(traceback(), "\n"))
         owl_text(paste0("Error analyzing prompt: ", conditionMessage(e)))
+        shinyjs::removeClass(id = "loading_gear", class = "show")
       })
     }
   })
@@ -261,6 +270,8 @@ Your prompt has a clear goal. To improve, consider the **Be Specific & Constrain
   output$owl_response <- renderUI({
     # Convert markdown bold (**text**) to HTML (<strong>text</strong>)
     response_text <- gsub("\\*\\*([^*]+)\\*\\*", "<strong>\\1</strong>", owl_text())
+    # Convert newline characters to <br> tags
+    response_text <- gsub("\n", "<br>", response_text)
     HTML(response_text)
   })
 }
