@@ -124,7 +124,7 @@ ui <- page_sidebar(
     p("Promptulus reviews your LLM prompts and helps you improve them."),
     p("Type your prompt in the text box, click Send, and the owl will:"),
     tags$ul(
-      tags$li("Rate your prompt with 1-5 stars"),
+      tags$li("Rate your prompt with 1-5 mice"),
       tags$li("Provide constructive feedback"),
       tags$li("Suggest improvements based on proven prompt engineering principles")
     ),
@@ -198,50 +198,54 @@ server <- function(input, output, session) {
         cat(paste0("[LOG] Guidelines loaded, length: ", nchar(guidelines_text), " characters\n"))
 
         # Create system prompt for grading
-        system_prompt <- paste0("You are Promptulus, an owl prompt engineering coach! You're a wise, encouraging expert who helps users improve their prompts by teaching them to think like a prompt engineer. You speak with personality and warmth, like a real mentor owl.
+        system_prompt <- paste0("You are Promptulus, an owl prompt engineering coach. You're a wise, encouraging expert who helps users improve their prompts. You speak with warmth and personality.
 
-IMPORTANT RULES:
-- DO NOT rewrite or suggest exact rewrites of the user's prompt
-- DO provide constructive feedback and suggestions for HOW they could improve it
-- ALWAYS reference specific principles from the guidelines when making suggestions
-- Explain WHY each principle matters
+IMPORTANT:
+- DO NOT rewrite the user's prompt
+- Give ONE suggestion only
+- Reference ONE principle and explain why it matters
+- Be concise and direct
+- This is a teaching tool - one improvement at a time
 
-Here are the prompt engineering principles to reference:
+Prompt engineering principles:
 
 ", guidelines_text, "
 
-For each prompt submitted, provide:
-1. A rating from 1-5 stars using star emojis (*)
-2. What works well in the prompt
-3. Specific suggestions for improvement - reference which principles apply and explain why
+RESPONSE FORMAT - YOU MUST FOLLOW THIS EXACTLY, WORD FOR WORD:
 
-RESPONSE FORMAT - START EXACTLY LIKE THIS:
-I give this prompt [X] stars
+I give this prompt [X] mice! (show X star emojis: 🐭🐭🐭 etc)
 
-Then provide:
-- What works: [brief explanation]
-- Suggestions: [numbered list of improvements with principle references]")
+
+[1-2 sentences about what works]. To improve, consider the **[Principle Name]** principle: [why it matters and how to apply it]. Try refining your prompt and submit again for the next suggestion!
+
+EXAMPLE:
+I give this prompt 🐭🐭🐭!
+
+
+Your prompt has a clear goal. To improve, consider the **Be Specific & Constrained** principle: More detail helps the AI understand exactly what you need. Try adding specifics about what aspects you want to focus on. Try refining your prompt and submit again for the next suggestion!")
 
         cat(paste0("[LOG] System prompt created, length: ", nchar(system_prompt), " characters\n"))
         cat(paste0("[LOG] User prompt length: ", nchar(user_prompt), " characters\n"))
 
         # Call OpenAI
-        cat("[LOG] Calling chat_openai with model gpt-4-turbo\n")
-        response <- chat_openai(
+        cat("[LOG] Creating chat object with system prompt\n")
+        chat_obj <- chat_openai(
+          system_prompt,
           model = "gpt-4-turbo",
-          system = system_prompt,
-          messages = list(
-            list(role = "user", content = paste0("Please review this prompt:\n\n", user_prompt))
-          ),
-          api_key = api_key
+          api_key = api_key,
+          echo = "none"
         )
+
+        cat("[LOG] Calling chat with user prompt\n")
+        response <- chat_obj$chat(paste0("Please review this prompt:\n\n", user_prompt))
 
         cat("[LOG] API response received\n")
         cat(paste0("[LOG] Response class: ", class(response), "\n"))
+        cat(paste0("[LOG] Response length: ", nchar(response), " characters\n"))
 
         # Update the owl's response with the grading
-        cat("[LOG] Extracting message from response\n")
-        owl_text(response$message)
+        cat("[LOG] Displaying response\n")
+        owl_text(response)
         cat("[LOG] Response displayed successfully\n")
 
       }, error = function(e) {
@@ -255,7 +259,9 @@ Then provide:
   
   # Render owl's response
   output$owl_response <- renderUI({
-    HTML(owl_text())
+    # Convert markdown bold (**text**) to HTML (<strong>text</strong>)
+    response_text <- gsub("\\*\\*([^*]+)\\*\\*", "<strong>\\1</strong>", owl_text())
+    HTML(response_text)
   })
 }
 
