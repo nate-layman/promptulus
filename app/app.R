@@ -183,7 +183,7 @@ ui <- page_sidebar(
 
   div(class = "top-section",
     div(class = "owl-container",
-      imageOutput("owl_image", height = "300px"),
+      tags$img(src = "owl.png", class = "owl-image", alt = "Owl"),
       div(class = "loading-gear", id = "loading_gear",
         tags$img(src = "gear.png")
       )
@@ -212,13 +212,6 @@ server <- function(input, output, session) {
   # Initialize reactive value for owl's response
   owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it!")
 
-  # Render the owl image from www folder
-  output$owl_image <- renderImage({
-    list(src = here::here("www/owl.png"),
-         width = "225px",
-         alt = "Owl")
-  }, deleteFile = FALSE)
-  
   # Update owl's response when send button is clicked
   observeEvent(input$send_btn, {
     if (nchar(trimws(input$user_input)) > 0) {
