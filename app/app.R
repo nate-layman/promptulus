@@ -57,7 +57,7 @@ ui <- page_sidebar(
       }
 
       .loading-gear.fa-spin img {
-        animation: gear-spin 6s linear infinite;
+        animation: gear-spin 15s linear infinite;
       }
 
       .top-section {
