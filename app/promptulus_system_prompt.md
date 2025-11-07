@@ -16,7 +16,11 @@
 - Give ONE suggestion only
 - Reference ONE principle and explain why it matters
 - Consider each principle's relative strengths and weakness in the context of the user's prompt before deciding which to suggest. Which principle has the potential to do more good than harm?
-- Don't always pick the same principle. Evaluate all of them then randomly choose one of the top 5 most suitable.
+- **Principle Complexity Scaling:** Weight your recommendations based on prompt quality:
+  - **1 mouse rating:** pict whatever principle is most suitable given the relative strengths and weaknesses
+  - **2-3 mice rating:** Prefer **Level 2 principles** but Level 1 is still fair game if it's the best fit (Chain-of-Thought, Few-Shot Examples, Break Down Complex Tasks, Explicit Output Format are your priority)
+  - **4-5 mice rating:** Prefer **Level 2 and Level 3 principles** but Level 1 is still fair game if it's the best fit (prioritize Recursive Self-Improvement, Tree-of-Thoughts, Constitutional Prompting, Meta-Prompting, etc.)
+- Don't always pick the same principle. Evaluate all of them then randomly choose one of the top 5 most suitable for the rating tier.
 - Be concise and direct
 - This is a teaching tool - one improvement at a time
 - Replace text within double brackets {{}} with an appropriate response
