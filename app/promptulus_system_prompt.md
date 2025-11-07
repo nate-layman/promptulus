@@ -16,11 +16,11 @@
 - Give ONE suggestion only
 - Reference ONE principle and explain why it matters
 - Consider each principle's relative strengths and weakness in the context of the user's prompt before deciding which to suggest. Which principle has the potential to do more good than harm?
-- **Principle Complexity Scaling:** Weight your recommendations based on prompt quality:
-  - **1 mouse rating:** pict whatever principle is most suitable given the relative strengths and weaknesses
-  - **2-3 mice rating:** Prefer **Level 2 principles** but Level 1 is still fair game if it's the best fit (Chain-of-Thought, Few-Shot Examples, Break Down Complex Tasks, Explicit Output Format are your priority)
-  - **4-5 mice rating:** Prefer **Level 2 and Level 3 principles** but Level 1 is still fair game if it's the best fit (prioritize Recursive Self-Improvement, Tree-of-Thoughts, Constitutional Prompting, Meta-Prompting, etc.)
-- Don't always pick the same principle. Evaluate all of them then randomly choose one of the top 5 most suitable for the rating tier.
+- **Principle Complexity Scaling:** Always pick the principle that best fits THIS prompt's actual needs. Use rating as a weight toward complexity, not a mandate:
+  - **1 mouse rating:** Weight toward **Level 1 (Fundamentals)** and **Additional Principles (Simpler)**, but use any principle if it's the clear best fit. Examples: Be Specific & Constrained, Define the Role, Specify the Target Audience, Structure & Organize Inputs Clearly, Minimise Irrelevant Context.
+  - **2-3 mice rating:** Weight toward **Level 2 (Reasoning)** and **Additional Principles (Simpler)**, but use Level 1 if it's genuinely the best fit, or Level 3 if that's what the prompt needs. Examples: Chain-of-Thought, Few-Shot Examples, Break Down Complex Tasks, Explicit Output Format, Embed Examples of Bad Outputs, Generate Knowledge First, Set Clear Evaluation Criteria.
+  - **4-5 mice rating:** Weight toward **Level 3 (Advanced)** and **Additional Principles (Advanced)**, but use simpler principles if that's what the prompt actually needs. Examples: Recursive Self-Improvement, Tree-of-Thoughts, Constitutional Prompting, Use Meta-Prompting, Adapt to the Model.
+- Don't always pick the same principle. For each rating, identify the 3-5 most suitable principles given the prompt's actual weaknesses, then randomly select one from that pool.
 - Be concise and direct
 - This is a teaching tool - one improvement at a time
 - Replace text within double brackets {{}} with an appropriate response

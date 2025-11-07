@@ -167,15 +167,19 @@ ui <- page_sidebar(
   ),
   
   sidebar = sidebar(
-    h3("About Promptulus"),
-    p("Promptulus reviews your LLM prompts and helps you improve them."),
-    p("Type your prompt in the text box, click Send, and the owl will:"),
-    tags$ul(
-      tags$li("Rate your prompt with 1-5 mice"),
-      tags$li("Provide constructive feedback"),
-      tags$li("Suggest improvements based on proven prompt engineering principles")
+    div(style = "height: 100%; overflow-y: auto;",
+      h3("About Promptulus"),
+      p("Promptulus reviews your LLM prompts and helps you improve them."),
+      p("Type your prompt in the text box, click Send, and the owl will:"),
+      tags$ul(
+        tags$li("Rate your prompt with 1-5 mice"),
+        tags$li("Provide constructive feedback"),
+        tags$li("Suggest improvements based on proven prompt engineering principles")
+      ),
+      p("Your prompt stays in the text box so you can iterate and refine it based on the suggestions."),
+      hr(),
+      uiOutput("guidelines_content")
     ),
-    p("Your prompt stays in the text box so you can iterate and refine it based on the suggestions."),
     position = "right",
     width = "40%",
     open = "closed"
@@ -210,7 +214,7 @@ ui <- page_sidebar(
 server <- function(input, output, session) {
 
   # Initialize reactive value for owl's response
-  owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it!")
+  owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.")
 
   # Update owl's response when send button is clicked
   observeEvent(input$send_btn, {
@@ -293,6 +297,49 @@ server <- function(input, output, session) {
     # Convert newline characters to <br> tags
     response_text <- gsub("\n", "<br>", response_text)
     HTML(response_text)
+  })
+
+  # Render guidelines content
+  output$guidelines_content <- renderUI({
+    tryCatch({
+      # Read the guidelines markdown file
+      guidelines_path <- here::here("prompting_guidelines.md")
+      guidelines_lines <- readLines(guidelines_path, warn = FALSE)
+      guidelines_text <- paste(guidelines_lines, collapse = "\n")
+
+      # Convert markdown table to HTML with styling
+      html_content <- paste0(
+        "<style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-bottom: 20px;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+          }
+          th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+          }
+          tr:nth-child(even) {
+            background-color: #fafafa;
+          }
+          strong {
+            color: #04354a;
+          }
+        </style>",
+        markdown::markdownToHTML(text = guidelines_text, fragment.only = TRUE)
+      )
+
+      HTML(html_content)
+    }, error = function(e) {
+      HTML(paste0("<p style='color: red;'>Error loading guidelines: ", conditionMessage(e), "</p>"))
+    })
   })
 }
 
