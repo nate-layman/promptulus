@@ -4,6 +4,21 @@ library(bslib)
 library(ellmer)
 library(here)
 
+# Load environment variables from .Renviron file
+# Check multiple possible locations
+env_file_paths <- c(
+  ".Renviron",           # Running from  directory (shinyapps.io)
+  "../.env",             # Running from project root (local dev with .env)
+  here::here(".env")     # Using here package to find .env
+)
+
+for (path in env_file_paths) {
+  if (file.exists(path)) {
+    readRenviron(path)
+    break
+  }
+}
+
 ui <- page_sidebar(
   useShinyjs(),
 
@@ -15,23 +30,34 @@ ui <- page_sidebar(
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
 
-      @keyframes spin {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
-      }
-
       .loading-gear {
         position: absolute;
-        top: 18%;
+        top: 12%;
         left: 50%;
-        transform: translate(-50%, -50%) rotate(0deg);
-        font-size: 50px;
+        margin-left: -25px;
+        margin-top: -25px;
+        width: 50px;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transform-origin: 50% 50%;
         color: #04354a;
         pointer-events: none;
       }
 
-      .loading-gear.show {
-        animation: spin 2s linear infinite;
+      @keyframes gear-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .loading-gear img {
+        width: 50px;
+        height: 50px;
+      }
+
+      .loading-gear.fa-spin img {
+        animation: gear-spin 6s linear infinite;
       }
 
       .top-section {
@@ -159,7 +185,7 @@ ui <- page_sidebar(
     div(class = "owl-container",
       imageOutput("owl_image", height = "300px"),
       div(class = "loading-gear", id = "loading_gear",
-        tags$i(class = "fas fa-gear")
+        tags$img(src = "gear.png")
       )
     ),
     div(class = "speech-bubble-container",
@@ -184,11 +210,11 @@ ui <- page_sidebar(
 server <- function(input, output, session) {
 
   # Initialize reactive value for owl's response
-  owl_text <- reactiveVal("Hello! I'm Promptulus. Give me your prompt and I'll review it!")
+  owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it!")
 
   # Render the owl image from www folder
   output$owl_image <- renderImage({
-    list(src = "app/www/owl.png",
+    list(src = here::here("www/owl.png"),
          width = "225px",
          alt = "Owl")
   }, deleteFile = FALSE)
@@ -199,7 +225,7 @@ server <- function(input, output, session) {
       user_prompt <- input$user_input
 
       # Show loading gear
-      shinyjs::addClass(id = "loading_gear", class = "show")
+      shinyjs::addClass(id = "loading_gear", class = "fa-spin")
 
       # Call Google Gemini API using ellmer
       tryCatch({
@@ -210,21 +236,21 @@ server <- function(input, output, session) {
         if (api_key == "") {
           cat("[LOG] ERROR: GEMINI_API_KEY not set\n")
           owl_text("Error: GEMINI_API_KEY not set in .env file")
-          shinyjs::removeClass(id = "loading_gear", class = "show")
+          shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
           return()
         }
 
         cat("[LOG] API key found\n")
 
         # Read the prompting guidelines
-        cat("[LOG] Reading prompting guidelines from app/prompting_guidelines.md\n")
-        guidelines <- readLines(here::here("app/prompting_guidelines.md"), warn = FALSE)
+        cat("[LOG] Reading prompting guidelines from prompting_guidelines.md\n")
+        guidelines <- readLines(here::here("prompting_guidelines.md"), warn = FALSE)
         guidelines_text <- paste(guidelines, collapse = "\n")
         cat(paste0("[LOG] Guidelines loaded, length: ", nchar(guidelines_text), " characters\n"))
 
         # Read the system prompt template
-        cat("[LOG] Reading system prompt from app/promptulus_system_prompt.md\n")
-        system_prompt_template <- readLines(here::here("app/promptulus_system_prompt.md"), warn = FALSE)
+        cat("[LOG] Reading system prompt from promptulus_system_prompt.md\n")
+        system_prompt_template <- readLines(here::here("promptulus_system_prompt.md"), warn = FALSE)
         system_prompt_text <- paste(system_prompt_template, collapse = "\n")
 
         # Replace the {{GUIDELINES}} placeholder with actual guidelines
@@ -232,9 +258,7 @@ server <- function(input, output, session) {
         cat(paste0("[LOG] System prompt created, length: ", nchar(system_prompt), " characters\n"))
         cat(paste0("[LOG] User prompt length: ", nchar(user_prompt), " characters\n"))
 
-        # Call LLM using ellmer's generic chat() function
-        # To switch providers, just change the name parameter:
-        # "openai", "anthropic", "google_gemini", etc.
+        # Call LLM using ellmer's chat() function
         cat("[LOG] Creating chat object with system prompt\n")
         chat_obj <- chat(
           name = "google_gemini/gemini-2.5-flash",
@@ -257,14 +281,14 @@ server <- function(input, output, session) {
         cat("[LOG] Displaying response\n")
         owl_text(response)
         cat("[LOG] Response displayed successfully\n")
-        shinyjs::removeClass(id = "loading_gear", class = "show")
+        shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
 
       }, error = function(e) {
         cat(paste0("[LOG] ERROR: ", conditionMessage(e), "\n"))
         cat(paste0("[LOG] Error traceback:\n"))
         cat(paste0(traceback(), "\n"))
         owl_text(paste0("Error analyzing prompt: ", conditionMessage(e)))
-        shinyjs::removeClass(id = "loading_gear", class = "show")
+        shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
       })
     }
   })

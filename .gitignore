@@ -1,5 +1,6 @@
 # Environment variables (API keys)
 .env
+.Renviron
 
 # R and RStudio files
 .Rproj.user
@@ -12,10 +13,12 @@
 *.tar.gz
 *.zip
 
-# Old shinylive export directory (no longer used)
+# Deployment directories
 site/
+docs/
 
-# Note: docs/ is NOT ignored - it contains the deployed shinylive app for GitHub Pages
+# rsconnect deployment info (contains account details)
+rsconnect/
 
 # System files
 .DS_Store
@@ -34,3 +37,6 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+.claude/**
+docs/**

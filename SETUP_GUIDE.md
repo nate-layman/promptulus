@@ -15,7 +15,7 @@ Use your Google account to sign in.
 
 ### 4. Keep it secure!
 - Never commit your API key to git
-- The `.env` file is already in `.gitignore` to prevent this
+- `.env` and `.Renviron` files are already in `.gitignore` to prevent this
 - Don't share your API key publicly
 
 ## Local Development Setup
@@ -30,88 +30,79 @@ cp .env.example .env
 
 # 3. Install R packages
 # Open R or RStudio and run:
-install.packages(c("shiny", "shinyjs", "bslib", "ellmer", "here"))
+install.packages(c("shiny", "shinyjs", "bslib", "ellmer", "here", "rsconnect"))
 
 # 4. Run the app
 # In R console from project root:
 shiny::runApp("app")
 ```
 
-## GitHub Deployment Setup
+## shinyapps.io Deployment
 
-### Quick Deploy Method (Recommended)
+Deploy your app to shinyapps.io to keep your API key secure on the server.
 
-1. **Install shinylive**
+### Prepare for Deployment
+
+Before deploying, set up your `.Renviron` file in the app folder:
+
+```bash
+# Copy the example file
+cp app/.Renviron.example app/.Renviron
+
+# Edit app/.Renviron and add your API key
+# GEMINI_API_KEY=your_actual_api_key_here
+```
+
+**Important**: The `app/.Renviron` file will be deployed with your app to shinyapps.io and is how your app accesses the API key on the server.
+
+### Create Account
+
+1. Go to [shinyapps.io](https://www.shinyapps.io/)
+2. Sign up for a free account
+3. Free tier includes:
+   - 5 applications max
+   - 25 active hours/month
+   - 1 GB RAM per app
+
+### Configure rsconnect
+
+1. Log in to [shinyapps.io](https://www.shinyapps.io/)
+2. Click your name (top right) → **Tokens**
+3. Click **Show** then **Show Secret**
+4. Copy the entire command and run it in R:
+
    ```r
-   install.packages("shinylive")
+   rsconnect::setAccountInfo(name='your-name',
+                             token='YOUR_TOKEN',
+                             secret='YOUR_SECRET')
    ```
 
-2. **Export your app**
-   ```r
-   # From R console
-   shinylive::export("app", "docs")
-   ```
+### Deploy
 
-3. **Embed API key for deployment**
+```r
+# From the project root directory
+rsconnect::deployApp(appDir = "app", appName = "promptulus")
+```
 
-   ⚠️ **Security Note**: For public deployment, your API key will be visible in the browser code. Only use free-tier keys!
+First deployment takes a few minutes. Your app will be live at:
+```
+https://your-name.shinyapps.io/promptulus/
+```
 
-   ```r
-   # Backup your app first
-   file.copy("app/app.R", "app/app.R.backup")
+### Update Your App
 
-   # Read and modify
-   app_code <- readLines("app/app.R")
-   app_code <- gsub('Sys.getenv\\("GEMINI_API_KEY"\\)', '"your_actual_api_key_here"', app_code)
-   writeLines(app_code, "app/app.R")
+After making changes:
 
-   # Export with embedded key
-   shinylive::export("app", "docs")
+```r
+rsconnect::deployApp(appDir = "app", appName = "promptulus")
+```
 
-   # Restore original
-   file.copy("app/app.R.backup", "app/app.R", overwrite = TRUE)
-   file.remove("app/app.R.backup")
-   ```
+### Manage Apps
 
-4. **Enable GitHub Pages**
-   - Go to repository **Settings** → **Pages**
-   - Source: **Deploy from a branch**
-   - Branch: **main**
-   - Folder: **/docs**
-   - Click **Save**
-
-5. **Commit and push**
-   ```bash
-   git add docs/
-   git commit -m "Add shinylive deployment"
-   git push origin main
-   ```
-
-6. **Access your app**
-   - Wait 1-2 minutes for GitHub Pages to deploy
-   - Visit: `https://[your-username].github.io/[repo-name]/`
-
-### Automated Deployment with GitHub Actions
-
-Alternatively, use the included workflow:
-
-1. **Add GitHub Secret**
-   - Settings → Secrets and variables → Actions
-   - New repository secret
-   - Name: `GEMINI_API_KEY`
-   - Value: Your API key
-
-2. **Enable GitHub Pages**
-   - Settings → Pages
-   - Source: **Deploy from a branch**
-   - Branch: **main**, Folder: **/docs**
-
-3. **Push to trigger deployment**
-   ```bash
-   git push origin main
-   ```
-
-The workflow will automatically embed your key and export to docs/.
+- **Dashboard**: [shinyapps.io/admin](https://www.shinyapps.io/admin/)
+- **Logs**: Click your app → Logs tab
+- **Usage**: Monitor active hours remaining
+- **Archive**: Free up slots for new apps
 
 ## Troubleshooting
 
