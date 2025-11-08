@@ -271,7 +271,10 @@ server <- function(input, output, session) {
       # Expand to 100%
       sidebar_width(1.00)
       shinyjs::runjs("
-        document.querySelector('.bslib-sidebar-layout').style.setProperty('--bslib-sidebar-width', '100%');
+        var sidebar = document.querySelector('.bslib-sidebar');
+        if (sidebar) {
+          sidebar.style.width = '100%';
+        }
         document.getElementById('toggle_icon').classList.remove('fa-expand-alt');
         document.getElementById('toggle_icon').classList.add('fa-compress-alt');
       ")
@@ -279,7 +282,10 @@ server <- function(input, output, session) {
       # Compress back to 40%
       sidebar_width(0.40)
       shinyjs::runjs("
-        document.querySelector('.bslib-sidebar-layout').style.setProperty('--bslib-sidebar-width', '40%');
+        var sidebar = document.querySelector('.bslib-sidebar');
+        if (sidebar) {
+          sidebar.style.width = '40%';
+        }
         document.getElementById('toggle_icon').classList.remove('fa-compress-alt');
         document.getElementById('toggle_icon').classList.add('fa-expand-alt');
       ")
