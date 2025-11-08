@@ -135,7 +135,7 @@ promptulus/
 ├── app/
 │   ├── app.R                          # Main Shiny application
 │   ├── promptulus_system_prompt.md    # System prompt template for Promptulus
-│   ├── prompting_guidelines.md        # Prompt engineering principles
+│   ├── prompting_principles.md        # Prompt engineering principles
 │   ├── siren_system_prompt.md         # System prompt for AI safety game
 │   └── www/
 │       └── owl.png                     # Owl mascot image

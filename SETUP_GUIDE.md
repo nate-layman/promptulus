@@ -149,7 +149,7 @@ Once your app is running:
 1. Try submitting different prompts to see how Promptulus reviews them
 2. Iterate on your prompts based on the feedback
 3. Check out the game concepts in the repository for future features
-4. Customize the prompt engineering principles in `app/prompting_guidelines.md`
+4. Customize the prompt engineering principles in `app/prompting_principles.md`
 5. Modify the system prompt in `app/promptulus_system_prompt.md` to change how Promptulus behaves
 
 ## Getting Help

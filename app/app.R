@@ -240,8 +240,8 @@ server <- function(input, output, session) {
         cat("[LOG] API key found\n")
 
         # Read the prompting guidelines
-        cat("[LOG] Reading prompting guidelines from prompting_guidelines.md\n")
-        guidelines <- readLines(here::here("prompting_guidelines.md"), warn = FALSE)
+        cat("[LOG] Reading prompting guidelines from prompting_principles.md\n")
+        guidelines <- readLines(here::here("prompting_principles.md"), warn = FALSE)
         guidelines_text <- paste(guidelines, collapse = "\n")
         cat(paste0("[LOG] Guidelines loaded, length: ", nchar(guidelines_text), " characters\n"))
 
@@ -303,7 +303,7 @@ server <- function(input, output, session) {
   output$guidelines_content <- renderUI({
     tryCatch({
       # Read the guidelines markdown file
-      guidelines_path <- here::here("prompting_guidelines.md")
+      guidelines_path <- here::here("prompting_principles.md")
       guidelines_lines <- readLines(guidelines_path, warn = FALSE)
       guidelines_text <- paste(guidelines_lines, collapse = "\n")
 
