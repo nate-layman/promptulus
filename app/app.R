@@ -30,10 +30,6 @@ ui <- page_sidebar(
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
 
-      .bslib-sidebar-layout {
-        --bslib-sidebar-width: 40% !important;
-      }
-
 
       .loading-gear {
         position: absolute;
@@ -63,24 +59,6 @@ ui <- page_sidebar(
 
       .loading-gear.fa-spin img {
         animation: gear-spin 15s linear infinite;
-      }
-
-      .sidebar-control-btn {
-        background: none;
-        border: 1px solid #ddd;
-        font-size: 18px;
-        cursor: pointer;
-        color: #2196F3;
-        padding: 5px 12px;
-        border-radius: 5px;
-        transition: all 0.2s;
-        font-weight: bold;
-      }
-
-      .sidebar-control-btn:hover {
-        background-color: #f0f0f0;
-        color: #1976D2;
-        border-color: #2196F3;
       }
 
       .top-section {
@@ -190,23 +168,7 @@ ui <- page_sidebar(
   ),
   
   sidebar = sidebar(
-    div(style = "height: 100%; overflow-y: auto; position: relative;",
-      div(id = "sidebar_controls", style = "display: flex; gap: 10px; margin-bottom: 15px;",
-        tags$button(
-          HTML("&lt;"),
-          id = "expand_btn",
-          class = "sidebar-control-btn",
-          title = "Expand sidebar",
-          onclick = "Shiny.setInputValue('expand_sidebar', true);"
-        ),
-        tags$button(
-          HTML("&gt;"),
-          id = "close_btn",
-          class = "sidebar-control-btn",
-          title = "Close sidebar",
-          onclick = "document.querySelector('.bslib-sidebar-toggle').click();"
-        )
-      ),
+    div(style = "height: 100%; overflow-y: auto;",
       h3("About Promptulus"),
       p("Promptulus reviews your LLM prompts and helps you improve them."),
       p("Type your prompt in the text box, click Send, and the owl will:"),
@@ -255,21 +217,6 @@ server <- function(input, output, session) {
   # Initialize reactive values
   owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.")
   previous_principle <- reactiveVal("None")
-  sidebar_expanded <- reactiveVal(FALSE)
-
-  # Handle sidebar expansion
-  observeEvent(input$expand_sidebar, {
-    sidebar_expanded(!sidebar_expanded())
-    if (sidebar_expanded()) {
-      # Expand to 100%
-      shinyjs::runjs("document.querySelector('.bslib-sidebar-layout').style.setProperty('--bslib-sidebar-width', '100%');")
-      shinyjs::hide("expand_btn")
-    } else {
-      # Collapse to 40%
-      shinyjs::runjs("document.querySelector('.bslib-sidebar-layout').style.setProperty('--bslib-sidebar-width', '40%');")
-      shinyjs::show("expand_btn")
-    }
-  })
 
   # Update owl's response when send button is clicked
   observeEvent(input$send_btn, {
