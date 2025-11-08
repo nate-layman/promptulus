@@ -213,8 +213,9 @@ ui <- page_sidebar(
 
 server <- function(input, output, session) {
 
-  # Initialize reactive value for owl's response
+  # Initialize reactive values
   owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.")
+  previous_principle <- reactiveVal("None")
 
   # Update owl's response when send button is clicked
   observeEvent(input$send_btn, {
@@ -252,7 +253,13 @@ server <- function(input, output, session) {
 
         # Replace the {{GUIDELINES}} placeholder with actual guidelines
         system_prompt <- gsub("\\{\\{GUIDELINES\\}\\}", guidelines_text, system_prompt_text)
+
+        # Replace the {{PREVIOUS_PRINCIPLE}} placeholder with the previous principle (or "None" on first call)
+        prev_principle <- previous_principle()
+        system_prompt <- gsub("\\{\\{PREVIOUS_PRINCIPLE\\}\\}", prev_principle, system_prompt)
+
         cat(paste0("[LOG] System prompt created, length: ", nchar(system_prompt), " characters\n"))
+        cat(paste0("[LOG] Previous principle: ", prev_principle, "\n"))
         cat(paste0("[LOG] User prompt length: ", nchar(user_prompt), " characters\n"))
 
         # Call LLM using ellmer's chat() function
@@ -277,6 +284,19 @@ server <- function(input, output, session) {
         # Update the owl's response with the grading
         cat("[LOG] Displaying response\n")
         owl_text(response)
+
+        # Extract the principle name from the response to avoid recommending it next time
+        # Pattern: "consider using the **Principle Name** principle"
+        principle_match <- regmatches(response, regexpr("consider using the \\*\\*([^*]+)\\*\\*", response))
+        if (length(principle_match) > 0) {
+          # Extract just the principle name between the asterisks
+          principle_name <- gsub(".*\\*\\*([^*]+)\\*\\*.*", "\\1", principle_match[1])
+          previous_principle(principle_name)
+          cat(paste0("[LOG] Extracted principle: ", principle_name, "\n"))
+        } else {
+          cat("[LOG] Could not extract principle from response\n")
+        }
+
         cat("[LOG] Response displayed successfully\n")
         shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
 

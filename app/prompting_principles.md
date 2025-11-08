@@ -1,6 +1,6 @@
 ### Prompt Engineering Principles
 
-| Advice Category | Principle (What to Do) | Why This Works (Benefit) | What It Is (Plain English) | Weaknesses / Limitations |
+| Advice Category | Principle | Why This Works | What It Is | Limitations |
 | :--- | :--- | :--- | :--- | :--- |
 | **Level 1: Core Clarity** | **Be Specific & Constrained** | Helps the model stay focused and deliver relevant results by reducing ambiguity. | Clearly state what you want in detail: specify length, audience, format, tone, and key requirements (e.g., "exactly 3 bullet points, beginner-friendly, no technical jargon"). | Too many constraints can over-limit creativity or make the model refuse entirely. Being too specific in one dimension may also cause the model to ignore other important context. |
 | **Level 1: Core Clarity** | **Define the Role** | Ensures the model responds with the right "voice" and expertise for the task. | Tell the model who it is (freelance writer, data analyst, grant reviewer, experienced teacher) to shape the answer style and depth. | Role-only prompts can feel generic without supporting context. Overuse of roles may confuse the model if they conflict with the actual task. |
