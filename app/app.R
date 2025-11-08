@@ -43,31 +43,6 @@ ui <- page_sidebar(
         margin: 0;
       }
 
-      .sidebar-expand-btn {
-        background: none;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
-        color: #888;
-        padding: 0;
-        position: absolute;
-        top: 0;
-        right: 0;
-        transition: color 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .sidebar-expand-btn:hover {
-        color: #666;
-      }
-
-      .sidebar-expand-btn i {
-        font-size: 18px;
-      }
-
-
       .loading-gear {
         position: absolute;
         top: 12%;
@@ -207,14 +182,7 @@ ui <- page_sidebar(
   sidebar = sidebar(
     div(style = "height: 100%; overflow-y: auto; overflow-x: auto;",
       div(class = "sidebar-header",
-        h3("About Promptulus"),
-        tags$button(
-          tags$i(id = "toggle_icon", class = "fas fa-expand-alt"),
-          id = "expand_compress_btn",
-          class = "sidebar-expand-btn",
-          title = "Expand/compress sidebar",
-          onclick = "Shiny.setInputValue('toggle_sidebar_width', true);"
-        )
+        h3("About Promptulus")
       ),
       p("Promptulus reviews your LLM prompts and helps you improve them."),
       p("Type your prompt in the text box, click Send, and the owl will:"),
@@ -261,36 +229,8 @@ ui <- page_sidebar(
 server <- function(input, output, session) {
 
   # Initialize reactive values
-  owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.")
+  owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it!")
   previous_principle <- reactiveVal("None")
-  sidebar_width <- reactiveVal(0.50)
-
-  # Handle sidebar width toggle
-  observeEvent(input$toggle_sidebar_width, {
-    if (sidebar_width() == 0.50) {
-      # Expand to 100%
-      sidebar_width(1.00)
-      shinyjs::runjs("
-        var sidebar = document.querySelector('.bslib-sidebar');
-        if (sidebar) {
-          sidebar.style.width = '100%';
-        }
-        document.getElementById('toggle_icon').classList.remove('fa-expand-alt');
-        document.getElementById('toggle_icon').classList.add('fa-compress-alt');
-      ")
-    } else {
-      # Compress back to 50%
-      sidebar_width(0.50)
-      shinyjs::runjs("
-        var sidebar = document.querySelector('.bslib-sidebar');
-        if (sidebar) {
-          sidebar.style.width = '50%';
-        }
-        document.getElementById('toggle_icon').classList.remove('fa-compress-alt');
-        document.getElementById('toggle_icon').classList.add('fa-expand-alt');
-      ")
-    }
-  })
 
   # Update owl's response when send button is clicked
   observeEvent(input$send_btn, {
