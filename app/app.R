@@ -30,6 +30,11 @@ ui <- page_sidebar(
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
 
+      /* Make sidebar width adjustable */
+      .bslib-sidebar-layout {
+        --bslib-sidebar-width: 40% !important;
+      }
+
       .loading-gear {
         position: absolute;
         top: 12%;
@@ -178,6 +183,9 @@ ui <- page_sidebar(
       ),
       p("Your prompt stays in the text box so you can iterate and refine it based on the suggestions."),
       hr(),
+      h4("Sidebar Width"),
+      sliderInput("sidebar_width", label = NULL, min = 20, max = 60, value = 40, post = "%", step = 5),
+      hr(),
       uiOutput("guidelines_content")
     ),
     position = "right",
@@ -216,6 +224,12 @@ server <- function(input, output, session) {
   # Initialize reactive values
   owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.")
   previous_principle <- reactiveVal("None")
+
+  # Handle sidebar width adjustment
+  observeEvent(input$sidebar_width, {
+    width_value <- paste0(input$sidebar_width, "%")
+    shinyjs::runjs(paste0("document.documentElement.style.setProperty('--bslib-sidebar-width', '", width_value, "');"))
+  })
 
   # Update owl's response when send button is clicked
   observeEvent(input$send_btn, {
