@@ -35,42 +35,36 @@ ui <- page_sidebar(
       }
 
       .sidebar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        position: relative;
         margin-bottom: 15px;
       }
 
       .sidebar-header h3 {
         margin: 0;
-        flex: 1;
       }
 
       .sidebar-expand-btn {
         background: none;
-        border: 1px solid #ddd;
-        font-size: 16px;
+        border: none;
+        font-size: 18px;
         cursor: pointer;
-        color: #2196F3;
-        padding: 6px 8px;
-        border-radius: 5px;
-        transition: all 0.2s;
-        flex-shrink: 0;
+        color: #888;
+        padding: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transition: color 0.2s;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 32px;
-        height: 32px;
       }
 
       .sidebar-expand-btn:hover {
-        background-color: #f0f0f0;
-        color: #1976D2;
-        border-color: #2196F3;
+        color: #666;
       }
 
       .sidebar-expand-btn i {
-        font-size: 16px;
+        font-size: 18px;
       }
 
 
