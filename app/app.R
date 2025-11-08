@@ -31,7 +31,7 @@ ui <- page_sidebar(
       }
 
       .bslib-sidebar-layout {
-        --bslib-sidebar-width: 40% !important;
+        --bslib-sidebar-width: 50% !important;
       }
 
       .sidebar-header {
@@ -205,7 +205,7 @@ ui <- page_sidebar(
   ),
   
   sidebar = sidebar(
-    div(style = "height: 100%; overflow-y: auto;",
+    div(style = "height: 100%; overflow-y: auto; overflow-x: auto;",
       div(class = "sidebar-header",
         h3("About Promptulus"),
         tags$button(
@@ -228,7 +228,7 @@ ui <- page_sidebar(
       uiOutput("guidelines_content")
     ),
     position = "right",
-    width = "40%",
+    width = "50%",
     open = "closed"
   ),
 
@@ -263,11 +263,11 @@ server <- function(input, output, session) {
   # Initialize reactive values
   owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.")
   previous_principle <- reactiveVal("None")
-  sidebar_width <- reactiveVal(0.40)
+  sidebar_width <- reactiveVal(0.50)
 
   # Handle sidebar width toggle
   observeEvent(input$toggle_sidebar_width, {
-    if (sidebar_width() == 0.40) {
+    if (sidebar_width() == 0.50) {
       # Expand to 100%
       sidebar_width(1.00)
       shinyjs::runjs("
@@ -279,12 +279,12 @@ server <- function(input, output, session) {
         document.getElementById('toggle_icon').classList.add('fa-compress-alt');
       ")
     } else {
-      # Compress back to 40%
-      sidebar_width(0.40)
+      # Compress back to 50%
+      sidebar_width(0.50)
       shinyjs::runjs("
         var sidebar = document.querySelector('.bslib-sidebar');
         if (sidebar) {
-          sidebar.style.width = '40%';
+          sidebar.style.width = '50%';
         }
         document.getElementById('toggle_icon').classList.remove('fa-compress-alt');
         document.getElementById('toggle_icon').classList.add('fa-expand-alt');
