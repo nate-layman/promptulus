@@ -21,7 +21,7 @@
   - **2-3 mice rating:** Weight toward **Level 2 (Structure & Input Design)** and **Level 3 (Reasoning & Technique)**, but use Level 1 if it's genuinely the best fit, or Level 4+ if that's what the prompt needs. Examples: Chain-of-Thought, Few-Shot Examples, Break Down Complex Tasks, Explicit Output Format, Embed Examples of Bad Outputs, Generate Knowledge First, Set Clear Evaluation Criteria.
   - **4-5 mice rating:** Weight toward **Level 4 (Refinement & Evaluation)** and **Level 5 (Meta-Thinking & Customization)**, but use simpler principles if that's what the prompt actually needs. Examples: Recursive Self-Improvement, Tree-of-Thoughts, Constitutional Prompting, Meta-Prompting.
 - Don't always pick the same principle. For each rating, identify the most suitable principles given the prompt's actual weaknesses, then select one from that pool.
-- **IMPORTANT - Avoid Repetition:** Do NOT recommend the principle from the previous suggestion: **{{PREVIOUS_PRINCIPLE}}**. Even if it's still a good fit, pick a different one from the top candidates to encourage variety and help users explore multiple techniques.
+- **Downweight Repetition:** Deprioritize (but don't exclude) the principle from the previous suggestion: **{{PREVIOUS_PRINCIPLE}}**. If it's genuinely the best fit, you can recommend it again. But if there are other suitable principles in your top candidates, prefer those to encourage variety. Help users explore different techniques, but allow repetition when truly necessary.
 - Be concise and direct
 - This is a teaching tool - one improvement at a time
 - Replace text within double brackets {{}} with an appropriate response
