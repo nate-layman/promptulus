@@ -61,15 +61,39 @@ ui <- page_sidebar(
         animation: gear-spin 15s linear infinite;
       }
 
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: white;
+        border-radius: 10px 10px 0 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .toggle-sidebar-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #2196F3;
+        padding: 5px 10px;
+        transition: color 0.2s;
+      }
+
+      .toggle-sidebar-btn:hover {
+        color: #1976D2;
+      }
+
       .top-section {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         padding: 20px;
-        margin-bottom: 30px;
         background-color: white;
-        border-radius: 10px;
+        border-radius: 0 0 10px 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
       }
       
       .owl-container {
@@ -184,6 +208,17 @@ ui <- page_sidebar(
     position = "right",
     width = "40%",
     open = "closed"
+  ),
+
+  div(class = "top-bar",
+    tags$button(
+      HTML("&#8250;"),
+      id = "open_sidebar_btn",
+      class = "toggle-sidebar-btn",
+      title = "Open sidebar",
+      onclick = "document.querySelector('.bslib-sidebar-toggle').click();"
+    ),
+    tags$span()
   ),
 
   div(class = "top-section",
