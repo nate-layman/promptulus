@@ -49,19 +49,28 @@ ui <- page_sidebar(
       .sidebar-expand-btn {
         background: none;
         border: 1px solid #ddd;
-        font-size: 18px;
+        font-size: 16px;
         cursor: pointer;
         color: #2196F3;
-        padding: 5px 10px;
+        padding: 6px 8px;
         border-radius: 5px;
         transition: all 0.2s;
         flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
       }
 
       .sidebar-expand-btn:hover {
         background-color: #f0f0f0;
         color: #1976D2;
         border-color: #2196F3;
+      }
+
+      .sidebar-expand-btn i {
+        font-size: 16px;
       }
 
 
@@ -206,7 +215,7 @@ ui <- page_sidebar(
       div(class = "sidebar-header",
         h3("About Promptulus"),
         tags$button(
-          HTML("&#8644;"),
+          tags$i(id = "toggle_icon", class = "fas fa-expand-alt"),
           id = "expand_compress_btn",
           class = "sidebar-expand-btn",
           title = "Expand/compress sidebar",
@@ -265,11 +274,21 @@ server <- function(input, output, session) {
   # Handle sidebar width toggle
   observeEvent(input$toggle_sidebar_width, {
     if (sidebar_width() == 0.40) {
+      # Expand to 100%
       sidebar_width(1.00)
-      shinyjs::runjs("document.querySelector('.bslib-sidebar-layout').style.setProperty('--bslib-sidebar-width', '100%');")
+      shinyjs::runjs("
+        document.querySelector('.bslib-sidebar-layout').style.setProperty('--bslib-sidebar-width', '100%');
+        document.getElementById('toggle_icon').classList.remove('fa-expand-alt');
+        document.getElementById('toggle_icon').classList.add('fa-compress-alt');
+      ")
     } else {
+      # Compress back to 40%
       sidebar_width(0.40)
-      shinyjs::runjs("document.querySelector('.bslib-sidebar-layout').style.setProperty('--bslib-sidebar-width', '40%');")
+      shinyjs::runjs("
+        document.querySelector('.bslib-sidebar-layout').style.setProperty('--bslib-sidebar-width', '40%');
+        document.getElementById('toggle_icon').classList.remove('fa-compress-alt');
+        document.getElementById('toggle_icon').classList.add('fa-expand-alt');
+      ")
     }
   })
 
