@@ -215,7 +215,7 @@ server <- function(input, output, session) {
 
   # Initialize reactive values
   owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.")
-  previous_principle <- reactiveVal("Meta-Prompting")
+  previous_principle <- reactiveVal("None")
 
   # Update owl's response when send button is clicked
   observeEvent(input$send_btn, {
