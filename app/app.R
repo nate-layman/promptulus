@@ -205,7 +205,7 @@ ui <- page_sidebar(
     div(class = "owl-container",
       tags$img(src = "owl.png", class = "owl-image", alt = "Owl"),
       div(class = "loading-gear", id = "loading_gear",
-        tags$img(src = "gear.png")
+        tags$img(src = "owl_gear.png")
       )
     ),
     div(class = "speech-bubble-container",
@@ -230,7 +230,7 @@ ui <- page_sidebar(
 server <- function(input, output, session) {
 
   # Initialize reactive values
-  owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it!")
+  owl_text <- reactiveVal("Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.")
   previous_principle <- reactiveVal("None")
 
   # Update owl's response when send button is clicked
