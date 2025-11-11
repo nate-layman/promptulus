@@ -346,7 +346,7 @@ server <- function(input, output, session) {
       display_name = "Modulus (Workflow/Complexity)",
       image = "crab.png",
       gear = "crab_gear.png",
-      greeting = "Hello! I am Modulus. Show me your complex prompt and I'll help you break it into manageable, modular steps! You can also click the arrow to my right for more information.",
+      greeting = "Hello! I am Modulus. Show me your complex prompt and I'll help you break it into manageable, modular pieces! You can also click the arrow to my right for more information.",
       principles_file = "modularization_principles.md",
       system_prompt_file = "modulus_system_prompt.md",
       rating_icon = "shrimp",
