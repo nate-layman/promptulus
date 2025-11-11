@@ -421,19 +421,16 @@ server <- function(input, output, session) {
     Q5 = list(
       question = "Does your task require understanding context, ambiguity, or subjective interpretation?",
       yes = "LLM",
-      no = "SIMPLE"
+      no = "DATA_SCIENCE"
     ),
     LLM = list(
       outcome = "Your task is best suited for an **LLM approach**! It involves language understanding, content generation, or nuanced interpretation. Visit Promptulus the Owl for guidance on crafting effective prompts for your task."
     ),
     DATA_SCIENCE = list(
-      outcome = "Your task is a classic **data science problem**! Focus on traditional ML, statistical analysis, or data processing approaches. LLMs aren't needed here."
+      outcome = "Your task is a **data science problem**! This includes everything from simple rules and heuristics to complex ML models. Start with the simplest approach: deterministic logic, then statistical methods, and only use ML if patterns are too complex for simpler solutions. LLMs aren't needed here."
     ),
     HYBRID = list(
       outcome = "Your task needs a **hybrid approach**! Combine data science for analytical rigor with an LLM for communication or interpretation. Consider visiting Promptulus for the narrative portion."
-    ),
-    SIMPLE = list(
-      outcome = "Your task might not need AI or data science at all! Consider whether simple rules, heuristics, or deterministic logic would work. If you do need AI, describe your task more specifically for better guidance."
     )
   )
 
