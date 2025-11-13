@@ -187,6 +187,19 @@ ui <- page_sidebar(
         font-style: italic;
       }
 
+      .giscus-section {
+        padding: 20px;
+        margin-top: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .giscus-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
       .character-nav {
         display: flex;
         flex-direction: column;
@@ -313,6 +326,12 @@ ui <- page_sidebar(
                   width = "100%",
                   rows = 3),
     actionButton("send_btn", "Send", class = "send-button")
+  ),
+
+  # Giscus discussion - dynamically loaded per character
+  div(class = "giscus-section",
+    h3("Discussion"),
+    div(id = "giscus-container")
   )
 )
 
@@ -390,6 +409,32 @@ server <- function(input, output, session) {
   previous_principle <- reactiveVal("None")
   selected_character <- reactiveVal("promptulus")
 
+  # Initialize giscus on page load
+  observe({
+    char <- selected_character()
+    shinyjs::runjs(paste0("
+      var container = document.getElementById('giscus-container');
+      container.innerHTML = '';
+      var script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.setAttribute('data-repo', 'nate-layman/promptulus');
+      script.setAttribute('data-repo-id', 'R_kgDOQPUupA');
+      script.setAttribute('data-category', 'Character Discussions');
+      script.setAttribute('data-category-id', 'DIC_kwDOQPUupM4CxtCy');
+      script.setAttribute('data-mapping', 'specific');
+      script.setAttribute('data-term', '", char, "-discussion');
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', '1');
+      script.setAttribute('data-emit-metadata', '0');
+      script.setAttribute('data-input-position', 'bottom');
+      script.setAttribute('data-theme', 'preferred_color_scheme');
+      script.setAttribute('data-lang', 'en');
+      script.setAttribute('crossorigin', 'anonymous');
+      script.async = true;
+      container.appendChild(script);
+    "))
+  }, priority = 10)
+
   # Dichotra-specific state
   dichotra_mode <- reactiveVal(NULL)  # "ai" or "dichotomous_key"
   dichotra_question_id <- reactiveVal(NULL)
@@ -466,6 +511,29 @@ server <- function(input, output, session) {
     } else if (char == "dichotra") {
       shinyjs::addClass(id = "loading_gear", class = "dichotra-gear")
     }
+
+    # Inject giscus script dynamically for the selected character
+    shinyjs::runjs(paste0("
+      var container = document.getElementById('giscus-container');
+      container.innerHTML = '';
+      var script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.setAttribute('data-repo', 'nate-layman/promptulus');
+      script.setAttribute('data-repo-id', 'R_kgDOQPUupA');
+      script.setAttribute('data-category', 'Character Discussions');
+      script.setAttribute('data-category-id', 'DIC_kwDOQPUupM4CxtCy');
+      script.setAttribute('data-mapping', 'specific');
+      script.setAttribute('data-term', '", char, "-discussion');
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', '1');
+      script.setAttribute('data-emit-metadata', '0');
+      script.setAttribute('data-input-position', 'bottom');
+      script.setAttribute('data-theme', 'preferred_color_scheme');
+      script.setAttribute('data-lang', 'en');
+      script.setAttribute('crossorigin', 'anonymous');
+      script.async = true;
+      container.appendChild(script);
+    "))
   })
 
   # Render dynamic character image
@@ -732,6 +800,11 @@ server <- function(input, output, session) {
           strong {
             color: #04354a;
           }
+          .giscus-container {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+          }
         </style>",
         markdown::markdownToHTML(text = guidelines_text, fragment.only = TRUE)
       )
@@ -741,6 +814,7 @@ server <- function(input, output, session) {
       HTML(paste0("<p style='color: red;'>Error loading guidelines: ", conditionMessage(e), "</p>"))
     })
   })
+
 }
 
 shinyApp(ui = ui, server = server)
