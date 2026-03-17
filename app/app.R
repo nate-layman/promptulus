@@ -24,20 +24,20 @@ for (path in env_file_paths) {
 # Characters are ordered: Before AI → During AI → After AI
 character_config <- list(
   # --- BEFORE AI (Planning) ---
-  dichotra = list(
-    name = "Dichotra",
-    display_name = "Dichotra (When to Use AI)",
+  sequita = list(
+    name = "Sequita",
+    display_name = "Sequita (When to Use AI)",
     image = "squirrel.png",
     gear = "squirrel_gear.png",
-    gear_class = "dichotra-gear",
-    greeting = "Hello! I am Dichotra. Describe your task and I'll help you figure out whether it needs a transparent, auditable approach — or whether AI can take the lead. Click the arrow to my right for more information.",
+    gear_class = "sequita-gear",
+    greeting = "Hello! I am Sequita. Describe your task and I'll help you figure out whether it needs a transparent, auditable approach — or whether AI can take the lead. Click the arrow to my right for more information.",
     principles_file = "task_categorization_principles.md",
-    system_prompt_file = "dichotra_system_prompt.md",
+    system_prompt_file = "sequita_system_prompt.md",
     rating_icon = "none",
-    sidebar_title = "About Dichotra",
+    sidebar_title = "About Sequita",
     sidebar_description = HTML(
-      "<p>Dichotra helps you determine whether <strong>transparency</strong> matters for your task.</p>
-      <p>The key question: <em>Do you need to understand how the answer was reached, or just that it's correct?</em></p>
+      "<p>Sequita helps you determine whether <strong>transparency</strong> matters for your task.</p>
+      <p>The key question: <em>Do you need to understand the cause, or just the effect?</em></p>
       <p>Think of it like forecasting: sometimes you need to know <em>why</em> a prediction was right — what assumptions were made, whether the reasoning holds for new situations. Other times you just need an accurate forecast and the inner workings don't matter.</p>
       <p>Type your task description, click Send, and the squirrel will:</p>
       <ul>
@@ -287,7 +287,7 @@ ui <- page_sidebar(
         left: 50.5%;
       }
 
-      .loading-gear.dichotra-gear {
+      .loading-gear.sequita-gear {
         left: 35%;
       }
 
@@ -767,9 +767,9 @@ ui <- page_sidebar(
         tags$img(src = "octopus.png", class = "landing-mascot"),
         h1("The AI Literacy Companions"),
         p(class = "landing-subtitle",
-          "Hello! I'm Octavius. Using AI well isn't just about writing a good prompt — it's a whole workflow.",
+          "Hello! I'm Octavius. Using AI well isn't just about writing a good prompt. It's a whole workflow.",
           " Knowing when to use AI, what to tell it, and how to check its work are all different skills.",
-          " My 8 companions each teach one — click any character below to get started!"
+          " My 8 companions each teach one. Click any character below to get started!"
         )
       ),
 
@@ -792,8 +792,8 @@ ui <- page_sidebar(
 
       # Before AI
       div(class = "phase-section",
-        div(class = "phase-title", "Before AI — Planning"),
-        p(class = "phase-description", "Before you touch an AI tool, make sure you know whether you should be using one — and how to break the work into manageable pieces."),
+        div(class = "phase-title", "Before AI: Planning"),
+        p(class = "phase-description", "Before you touch an AI tool, make sure you know whether you should be using one and how to break the work into manageable pieces."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "before")], function(char_id) {
             cfg <- character_config[[char_id]]
@@ -815,7 +815,7 @@ ui <- page_sidebar(
 
       # During AI
       div(class = "phase-section",
-        div(class = "phase-title", "During AI — Intent, Instructions, Information, Interaction"),
+        div(class = "phase-title", "During AI: Intent, Instructions, Information, Interaction"),
         p(class = "phase-description", "Intent, instructions, information, and interaction all compete for the model's attention. Getting the balance right between these four is what separates useful AI output from noise."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "during")], function(char_id) {
@@ -838,7 +838,7 @@ ui <- page_sidebar(
 
       # After AI
       div(class = "phase-section",
-        div(class = "phase-title", "After AI — Quality & Reporting"),
+        div(class = "phase-title", "After AI: Quality & Reporting"),
         p(class = "phase-description", "AI can sound confident and still be wrong. These skills help you verify what it produced and document how you got there."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "after")], function(char_id) {
@@ -935,7 +935,7 @@ server <- function(input, output, session) {
     p("This project is designed to teach you how to",
       tags$em("think about"), "using AI. Each character highlights an important",
       "discipline in the AI workflow."),
-    p("The advice from any individual character is educational — it should not be used to make",
+    p("The advice from any individual character is educational. It should not be used to make",
       "definitive judgments about specific tasks. Always consult your institution's policies and",
       "use professional judgment."),
     footer = actionButton("dismiss_disclaimer", "I understand", class = "btn-primary"),
@@ -1131,8 +1131,8 @@ server <- function(input, output, session) {
         cat("[LOG] API response received\n")
         cat(paste0("[LOG] Response length: ", nchar(response), " characters\n"))
 
-        # For Dichotra: parse zone and append spectrum visualization
-        if (selected_character() == "dichotra") {
+        # For Sequita: parse zone and append spectrum visualization
+        if (selected_character() == "sequita") {
           zone_match <- regmatches(response, regexpr("\\[TRANSPARENCY: (high|low)\\]", response))
           zone <- NULL
           if (length(zone_match) > 0) {
@@ -1152,7 +1152,7 @@ server <- function(input, output, session) {
           cat(paste0("[LOG] Extracted principle: ", principle_name, "\n"))
         }
 
-        # Also try extracting from Dichotra/Telosa format: "Based on the **Principle Name** principle"
+        # Also try extracting from Sequita/Telosa format: "Based on the **Principle Name** principle"
         if (length(principle_match) == 0) {
           alt_match <- regmatches(response, regexpr("Based on the \\*\\*([^*]+)\\*\\*", response))
           if (length(alt_match) > 0) {

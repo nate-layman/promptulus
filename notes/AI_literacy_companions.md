@@ -27,10 +27,10 @@ Skills for evaluating and documenting what AI produced.
 
 ### Before AI
 
-#### Dichotra the Squirrel
+#### Sequita the Squirrel
 **Role:** Skill 0 — When to Use AI
-**Skill:** Determines where a task falls on the flexibility-interpretability spectrum
-**Core Question:** "Does it matter how the work got done?"
+**Skill:** Determines where a task falls on the transparency spectrum
+**Core Question:** "Do you need to understand the cause, or just the effect?"
 **Personality:** Analytical, pragmatic, decisive
 **Aesthetic:** Bronze-brown fur with teal highlights, copper eyes, gear-accented tail
 **Status:** Active
@@ -109,7 +109,7 @@ Skills for evaluating and documenting what AI produced.
 
 | Character | Animal | Skill | Phase | i^4 Component |
 |-----------|--------|-------|-------|----------------|
-| Dichotra | Squirrel | When to Use AI | Before | — |
+| Sequita | Squirrel | When to Use AI | Before | — |
 | Modulus | Crab | Task Decomposition | Before | — |
 | Telosa | Turtle | Intent Engineering | During | Intent |
 | Promptulus | Owl | Prompt Engineering | During | Instructions |
