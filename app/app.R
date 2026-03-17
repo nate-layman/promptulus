@@ -977,6 +977,14 @@ server <- function(input, output, session) {
     removeModal()
   })
 
+  # Pre-fill API key from URL parameter (?key=...)
+  observe({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query$key) && nchar(query$key) > 0) {
+      updateTextInput(session, "api_key_input", value = query$key)
+    }
+  }) |> bindEvent(session$clientData$url_search, once = TRUE)
+
   # Reactive values
   owl_text <- reactiveVal("")
   previous_principle <- reactiveVal("None")
