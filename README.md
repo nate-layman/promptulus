@@ -4,7 +4,7 @@ An interactive Shiny app that teaches fundamental skills for working with AI thr
 
 ## Live Demo
 
-Visit the deployed app: [https://nlayman.shinyapps.io/promptulus/](https://nlayman.shinyapps.io/promptulus/)
+Visit the deployed app: [https://n8-layman.shinyapps.io/promptulus/](https://n8-layman.shinyapps.io/promptulus/)
 
 ## Characters
 
@@ -51,7 +51,7 @@ The companions are organized into three workflow phases:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/promptulus.git
+   git clone https://github.com/nate-layman/promptulus.git
    cd promptulus
    ```
 

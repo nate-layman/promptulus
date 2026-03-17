@@ -11,8 +11,8 @@ The landing page mascot, **Octavius the Octopus**, holds all 8 skills together w
 ### Before AI — Planning (2 skills)
 Skills you use before you touch an AI tool.
 
-### During AI — i^4 (4 skills)
-Four things that compete for the same finite context window space:
+### During AI — The Four I's (4 skills)
+Four skills that compete for the model's attention:
 - **Intent** — your goals and boundaries
 - **Instructions** — your prompt
 - **Information** — your documents and data
@@ -44,7 +44,7 @@ Skills for evaluating and documenting what AI produced.
 
 ---
 
-### During AI (i^4)
+### During AI (The Four I's)
 
 #### Telosa the Turtle
 **Role:** Intent Engineering
@@ -107,7 +107,7 @@ Skills for evaluating and documenting what AI produced.
 
 ## Design Cohesion
 
-| Character | Animal | Skill | Phase | i^4 Component |
+| Character | Animal | Skill | Phase | "I" Word |
 |-----------|--------|-------|-------|----------------|
 | Sequita | Squirrel | When to Use AI | Before | — |
 | Modulus | Crab | Task Decomposition | Before | — |
