@@ -49,7 +49,8 @@ character_config <- list(
     active = TRUE,
     phase = "before",
     skill_label = "Should I use AI?",
-    skill_description = "Some tasks need a clear paper trail — others just need a good answer. Knowing the difference keeps you out of trouble."
+    skill_description = "Transparency: Some tasks need a clear paper trail — others just need a good answer. Knowing the difference keeps you out of trouble.",
+    name_origin = "From Latin 'sequi' (to follow/trace) — tracing the reasoning behind a result"
   ),
   modulus = list(
     name = "Modulus",
@@ -75,7 +76,8 @@ character_config <- list(
     active = TRUE,
     phase = "before",
     skill_label = "How do I break this down?",
-    skill_description = "Complex tasks overwhelm AI. Breaking them into steps gets better results and lets you catch errors early."
+    skill_description = "Decomposition: Complex tasks overwhelm AI. Breaking them into steps gets better results and lets you catch errors early.",
+    name_origin = "From Latin 'modulus' (small measure) — breaking big problems into measured pieces"
   ),
   # --- DURING AI (Context Window Disciplines) ---
   telosa = list(
@@ -104,7 +106,8 @@ character_config <- list(
     active = TRUE,
     phase = "during",
     skill_label = "What's my intent?",
-    skill_description = "Intent: Without clear intent, AI may take shortcuts you never intended — including unsafe ones. Define the goal and the guardrails."
+    skill_description = "Intent: Without clear intent, AI may take shortcuts you never intended — including unsafe ones. Define the goal and the guardrails.",
+    name_origin = "From Greek 'telos' (\u03c4\u03ad\u03bb\u03bf\u03c2) — purpose, end, goal"
   ),
   promptulus = list(
     name = "Promptulus",
@@ -130,7 +133,8 @@ character_config <- list(
     active = TRUE,
     phase = "during",
     skill_label = "How do I ask?",
-    skill_description = "Instructions: How you phrase a request dramatically changes what you get back. Small wording changes yield big differences."
+    skill_description = "Instructions: How you phrase a request dramatically changes what you get back. Small wording changes yield big differences.",
+    name_origin = "From Latin 'promptus' (ready, prepared) — preparing effective requests"
   ),
   mnemos = list(
     name = "Mnemos",
@@ -150,7 +154,8 @@ character_config <- list(
     active = FALSE,
     phase = "during",
     skill_label = "What does the AI need to know?",
-    skill_description = "Information: Don't rely on the model's general knowledge — give it the specific context it needs. But don't overwhelm it with everything either. Curate what matters."
+    skill_description = "Information: Don't rely on the model's general knowledge — give it the specific context it needs. But don't overwhelm it with everything either. Curate what matters.",
+    name_origin = "From Greek 'mneme' (\u03bc\u03bd\u03ae\u03bc\u03b7) — memory. The elephant never forgets."
   ),
   dialogos = list(
     name = "Dialogos",
@@ -170,7 +175,8 @@ character_config <- list(
     active = FALSE,
     phase = "during",
     skill_label = "How do I manage the conversation?",
-    skill_description = "Interaction: Every exchange shapes what the model remembers. Knowing when to continue, reset, or restructure keeps your AI sharp instead of confused."
+    skill_description = "Interaction: Every exchange shapes what the model remembers. Knowing when to continue, reset, or restructure keeps your AI sharp instead of confused.",
+    name_origin = "From Greek 'dialogos' (\u03b4\u03b9\u03ac\u03bb\u03bf\u03b3\u03bf\u03c2) — conversation, dialogue"
   ),
   # --- AFTER AI (Quality) ---
   veridex = list(
@@ -191,7 +197,8 @@ character_config <- list(
     active = FALSE,
     phase = "after",
     skill_label = "Is the output good?",
-    skill_description = "AI can sound confident and still be wrong. Systematic evaluation catches errors before they become someone else's problem."
+    skill_description = "Evaluation: AI can sound confident and still be wrong. Systematic evaluation catches errors before they become someone else's problem.",
+    name_origin = "From Latin 'verus' (true) + 'index' (pointer) — pointing to the truth"
   ),
   lucerna = list(
     name = "Lucerna",
@@ -211,7 +218,8 @@ character_config <- list(
     active = FALSE,
     phase = "after",
     skill_label = "Can I explain what I did?",
-    skill_description = "If you can't explain how you got here, you're not done yet. Transparent reporting builds trust and lets others reproduce your work."
+    skill_description = "Reporting: If you can't explain how you got here, you're not done yet. Transparent reporting builds trust and lets others reproduce your work.",
+    name_origin = "From Latin 'lucerna' (lamp, lantern) — shedding light on the process"
   )
 )
 
@@ -813,9 +821,9 @@ ui <- page_sidebar(
         )
       ),
 
-      # Before AI
+      # Deciding to Use AI
       div(class = "phase-section",
-        div(class = "phase-title", "Before AI: Planning"),
+        div(class = "phase-title", "Deciding to Use AI"),
         p(class = "phase-description", "Before you touch an AI tool, make sure you know whether you should be using one and how to break the work into manageable pieces."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "before")], function(char_id) {
@@ -826,7 +834,7 @@ ui <- page_sidebar(
             } else { "" }
 
             div(class = card_class, onclick = card_click,
-              if (!is.null(cfg$image)) tags$img(src = cfg$image) else div(class = "placeholder-img", "?"),
+              if (!is.null(cfg$image)) tags$img(src = cfg$image, title = cfg$name_origin) else div(class = "placeholder-img", "?"),
               h4(cfg$name),
               p(class = "card-skill", cfg$skill_label),
               p(class = "card-description", cfg$skill_description),
@@ -836,9 +844,9 @@ ui <- page_sidebar(
         )
       ),
 
-      # During AI
+      # Using AI
       div(class = "phase-section",
-        div(class = "phase-title", "During AI: Intent, Instructions, Information, Interaction"),
+        div(class = "phase-title", "Using AI: Intent, Instructions, Information, Interaction"),
         p(class = "phase-description", "Intent, instructions, information, and interaction all compete for the model's attention. Getting the balance right between these four is what separates useful AI output from noise."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "during")], function(char_id) {
@@ -849,7 +857,7 @@ ui <- page_sidebar(
             } else { "" }
 
             div(class = card_class, onclick = card_click,
-              if (!is.null(cfg$image)) tags$img(src = cfg$image) else div(class = "placeholder-img", "?"),
+              if (!is.null(cfg$image)) tags$img(src = cfg$image, title = cfg$name_origin) else div(class = "placeholder-img", "?"),
               h4(cfg$name),
               p(class = "card-skill", cfg$skill_label),
               p(class = "card-description", cfg$skill_description),
@@ -859,9 +867,9 @@ ui <- page_sidebar(
         )
       ),
 
-      # After AI
+      # Understanding AI Outputs
       div(class = "phase-section",
-        div(class = "phase-title", "After AI: Quality & Reporting"),
+        div(class = "phase-title", "Understanding AI Outputs"),
         p(class = "phase-description", "AI can sound confident and still be wrong. These skills help you verify what it produced and document how you got there."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "after")], function(char_id) {
@@ -872,7 +880,7 @@ ui <- page_sidebar(
             } else { "" }
 
             div(class = card_class, onclick = card_click,
-              if (!is.null(cfg$image)) tags$img(src = cfg$image) else div(class = "placeholder-img", "?"),
+              if (!is.null(cfg$image)) tags$img(src = cfg$image, title = cfg$name_origin) else div(class = "placeholder-img", "?"),
               h4(cfg$name),
               p(class = "card-skill", cfg$skill_label),
               p(class = "card-description", cfg$skill_description),
