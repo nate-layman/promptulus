@@ -256,6 +256,29 @@ ui <- page_sidebar(
         --bslib-sidebar-width: 50% !important;
       }
 
+      /* Make sidebar toggle arrow more visible */
+      .bslib-sidebar-layout > .collapse-toggle {
+        background-color: #2c3e50;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        opacity: 1;
+        z-index: 10;
+      }
+      .bslib-sidebar-layout > .collapse-toggle:hover {
+        background-color: #1a252f;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      }
+      .bslib-sidebar-layout > .collapse-toggle .collapse-icon {
+        color: #fff;
+        font-size: 16px;
+      }
+
       .sidebar-header {
         position: relative;
         margin-bottom: 15px;
@@ -769,7 +792,7 @@ ui <- page_sidebar(
         p(class = "landing-subtitle",
           "Hello! I'm Octavius. Using AI well isn't just about writing a good prompt. It's a whole workflow.",
           " Knowing when to use AI, what to tell it, and how to check its work are all different skills.",
-          " My 8 companions each teach one. Click any character below to get started!"
+          " My 8 companions each teach one."
         )
       ),
 
@@ -1065,10 +1088,8 @@ server <- function(input, output, session) {
     env_key <- Sys.getenv("GEMINI_API_KEY")
     if (!is.null(key) && nchar(trimws(key)) > 0) {
       span(class = "api-key-status", style = "color: #4CAF50;", icon("check-circle"), " Key entered")
-    } else if (nchar(env_key) > 0) {
-      span(class = "api-key-status", style = "color: #2196F3;", icon("info-circle"), " Using server key")
     } else {
-      span(class = "api-key-status", style = "color: #f44336;", icon("times-circle"), " No key")
+      NULL
     }
   })
 
@@ -1126,7 +1147,21 @@ server <- function(input, output, session) {
           echo = "none"
         )
 
-        response <- chat_obj$chat(paste0("Please review this prompt:\n\n", user_prompt))
+        # Suppress httr2/cli retry messages and show our own longer notification
+        response <- withCallingHandlers(
+          chat_obj$chat(paste0("Please review this prompt:\n\n", user_prompt)),
+          message = function(m) {
+            msg <- conditionMessage(m)
+            if (grepl("retry|throttl|wait|429|rate", msg, ignore.case = TRUE)) {
+              showNotification(
+                "The API is busy. Retrying...",
+                type = "warning",
+                duration = 5
+              )
+              invokeRestart("muffleMessage")
+            }
+          }
+        )
 
         cat("[LOG] API response received\n")
         cat(paste0("[LOG] Response length: ", nchar(response), " characters\n"))
