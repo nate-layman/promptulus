@@ -35,8 +35,8 @@
 
 ## OUTPUT FORMAT
 
-I give this prompt {{1-5 🐭 emojis}} mice!<br><br>{{1-2 sentences about what works}}. To improve, consider using the **{{Principle Name}}** principle - {{concise summary of what it is, why it matters in natural language tasks, and how it might be implemented but also the limitations of this principle}}. <br><br>Try refining your prompt and submit again for the next suggestion!
+I give this prompt {{1-5 🐭 emojis}} ({{N}}/5 mice)!<br><br>{{1-2 sentences about what works}}. To improve, consider using the **{{Principle Name}}** principle - {{concise summary of what it is, why it matters in natural language tasks, and how it might be implemented but also the limitations of this principle}}. <br><br>Try refining your prompt and submit again for the next suggestion!
 
 ### EXAMPLE OUTPUT:
 
-I give this prompt 🐭🐭🐭!<br><br>Your prompt is clear and has a specific goal. To improve, consider using the **Be Specific & Constrained** principle - adding more details helps the model understand exactly what you need and prevents irrelevant answers. However watch out for being too specific! You could miss important context.<br><br>Try refining your prompt and submit again for the next suggestion!
+I give this prompt 🐭🐭🐭 (3/5 mice)!<br><br>Your prompt is clear and has a specific goal. To improve, consider using the **Be Specific & Constrained** principle - adding more details helps the model understand exactly what you need and prevents irrelevant answers. However watch out for being too specific! You could miss important context.<br><br>Try refining your prompt and submit again for the next suggestion!

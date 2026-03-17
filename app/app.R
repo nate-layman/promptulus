@@ -124,7 +124,7 @@ character_config <- list(
       "<p>Promptulus reviews your LLM prompts and helps you improve them.</p>
       <p>Type your prompt in the text box, click Send, and the owl will:</p>
       <ul>
-        <li>Rate your prompt with 1-5 mice</li>
+        <li>Rate your prompt (1-5 mice, where 5 is excellent)</li>
         <li>Provide constructive feedback</li>
         <li>Suggest improvements based on proven prompt engineering principles</li>
       </ul>
@@ -277,10 +277,16 @@ ui <- page_sidebar(
         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         opacity: 1;
         z-index: 10;
+        animation: pulse-toggle 2s ease-in-out 3;
+      }
+      @keyframes pulse-toggle {
+        0%, 100% { box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+        50% { box-shadow: 0 0 12px 4px rgba(44,62,80,0.6); }
       }
       .bslib-sidebar-layout > .collapse-toggle:hover {
         background-color: #1a252f;
         box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+        animation: none;
       }
       .bslib-sidebar-layout > .collapse-toggle .collapse-icon {
         color: #fff;
@@ -921,7 +927,8 @@ ui <- page_sidebar(
             src = cfg$image,
             class = icon_class,
             id = paste0("icon_", char_id),
-            onclick = onclick_js
+            onclick = onclick_js,
+            title = paste0(cfg$name, " — ", cfg$name_origin)
           )
         })
       ),
@@ -1069,7 +1076,7 @@ server <- function(input, output, session) {
   output$character_image <- renderUI({
     req(selected_character())
     config <- character_config[[selected_character()]]
-    tags$img(src = config$image, class = "owl-image", alt = config$name)
+    tags$img(src = config$image, class = "owl-image", alt = config$name, title = config$name_origin)
   })
 
   output$character_gear <- renderUI({
