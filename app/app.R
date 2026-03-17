@@ -36,14 +36,13 @@ character_config <- list(
     rating_icon = "none",
     sidebar_title = "About Dichotra",
     sidebar_description = HTML(
-      "<p>Dichotra helps you determine whether <strong>transparency and auditability</strong> matter for your task.</p>
-      <p>The key question: <em>Does anyone need to see how the work got done?</em></p>
-      <p>Think of it like the difference between a simple formula in a spreadsheet (transparent, auditable) and a black box that just gives you an answer (powerful, but opaque).</p>
+      "<p>Dichotra helps you determine whether <strong>transparency</strong> matters for your task.</p>
+      <p>The key question: <em>Do you need to understand how the answer was reached, or just that it's correct?</em></p>
+      <p>Think of it like forecasting: sometimes you need to know <em>why</em> a prediction was right — what assumptions were made, whether the reasoning holds for new situations. Other times you just need an accurate forecast and the inner workings don't matter.</p>
       <p>Type your task description, click Send, and the squirrel will:</p>
       <ul>
-        <li>Place your task on the transparency spectrum</li>
-        <li>Classify it as Process Critical, Human-in-the-Loop, or Output-Driven</li>
-        <li>Explain what that means for AI use</li>
+        <li>Assess whether your task needs high or low transparency</li>
+        <li>Explain what that means for choosing tools and methods</li>
       </ul>
       <p>Your task stays in the text box so you can refine and resubmit.</p>"
     ),
@@ -221,9 +220,8 @@ active_characters <- names(character_config)[sapply(character_config, function(x
 # ===== SPECTRUM VISUALIZATION =====
 spectrum_html <- function(zone) {
   positions <- list(
-    process_critical = "15%",
-    human_in_the_loop = "50%",
-    output_driven = "85%"
+    high = "20%",
+    low = "80%"
   )
   pos <- positions[[zone]]
   if (is.null(pos)) return("")
@@ -231,13 +229,13 @@ spectrum_html <- function(zone) {
   paste0(
     '<div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">',
     '<div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; font-weight: bold;">',
-    '<span>&larr; Transparency</span><span>Flexibility &rarr;</span></div>',
-    '<div style="position: relative; height: 30px; background: linear-gradient(to right, #e74c3c, #f39c12, #27ae60); border-radius: 15px;">',
+    '<span>&larr; High Transparency</span><span>Low Transparency &rarr;</span></div>',
+    '<div style="position: relative; height: 30px; background: linear-gradient(to right, #e74c3c, #27ae60); border-radius: 15px;">',
     '<div style="position: absolute; left: ', pos, '; top: -5px; transform: translateX(-50%); ',
     'width: 20px; height: 40px; background: white; border: 3px solid #333; border-radius: 50%;"></div>',
     '</div>',
     '<div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 5px; color: #666;">',
-    '<span>Process Critical</span><span>Human-in-the-Loop</span><span>Output-Driven</span></div>',
+    '<span>Show your work</span><span>Results matter, method doesn\'t</span></div>',
     '</div>'
   )
 }
@@ -1135,11 +1133,11 @@ server <- function(input, output, session) {
 
         # For Dichotra: parse zone and append spectrum visualization
         if (selected_character() == "dichotra") {
-          zone_match <- regmatches(response, regexpr("\\[ZONE: (process_critical|human_in_the_loop|output_driven)\\]", response))
+          zone_match <- regmatches(response, regexpr("\\[TRANSPARENCY: (high|low)\\]", response))
           zone <- NULL
           if (length(zone_match) > 0) {
-            zone <- gsub("\\[ZONE: |\\]", "", zone_match[1])
-            response <- gsub("\\s*\\[ZONE: [^]]+\\]\\s*", "", response)
+            zone <- gsub("\\[TRANSPARENCY: |\\]", "", zone_match[1])
+            response <- gsub("\\s*\\[TRANSPARENCY: [^]]+\\]\\s*", "", response)
           }
           owl_text(paste0(response, if (!is.null(zone)) spectrum_html(zone) else ""))
         } else {
