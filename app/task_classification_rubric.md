@@ -1,86 +1,25 @@
-# 🔀 AI Task Decision Key
-### Should this be an LLM task, a traditional data science task, or a hybrid?
+# Task Transparency Assessment
 
-Answer each question in order. Follow the “Yes” or “No” branch to the next step.
+### Where does your task fall on the transparency spectrum?
 
----
-
-## 1. Problem Definition
-
-**Q1:** Does the desired output primarily consist of *language*, *text interpretation*, or *semantic reasoning*?  
-- **Yes →** Go to **Q2 (LLM leaning)**  
-- **No →** Go to **Q3 (Structured data leaning)**  
-
-**Q2:** Is the output expected to vary by context, tone, or human nuance (e.g., summarization, explanation, reasoning)?  
-- **Yes →** **LLM-based approach**  
-- **No →** Go to **Q4**
-
-**Q3:** Is the output a *numeric value, class label, or structured decision* that can be compared to a ground truth?  
-- **Yes →** **Traditional data science or ML**  
-- **No →** Go to **Q5**
+The key question: **Does anyone need to see how the work got done?**
 
 ---
 
-## 2. Data & Ground Truth
+## The Transparency Spectrum
 
-**Q4:** Do you have large, labeled datasets or clear evaluation metrics?  
-- **Yes →** **Traditional data science**  
-- **No →** Go to **Q6**
-
-**Q5:** Is there *no single correct answer*, but rather a need for plausible reasoning or synthesis?  
-- **Yes →** **LLM-based approach**  
-- **No →** **Traditional data science**
-
-**Q6:** Is your goal exploratory (e.g., ideation, summarization, prototyping, hypothesis generation)?  
-- **Yes →** **LLM-based approach**  
-- **No →** Go to **Q7**
+| Zone | Description | AI Role |
+| :--- | :--- | :--- |
+| **Process Critical** | Someone must see and verify how the work was done. Auditors, sponsors, or compliance officers need a paper trail. | AI should NOT lead. Use transparent, auditable tools where every step is visible. |
+| **Human-in-the-Loop** | The output needs human review and judgment, but the exact method is less important. | AI assists with preparation (drafting, researching, organizing). A human reviews and approves. |
+| **Output-Driven** | Only the accuracy and quality of the final product matters. Nobody asks how you got there. | AI can take the lead. You focus on checking the result. |
 
 ---
 
-## 3. Operational Characteristics
+## Quick Self-Check
 
-**Q7:** Must the process produce *identical, repeatable* results for audit or regulation?  
-- **Yes →** **Traditional data science**  
-- **No →** Go to **Q8**
+1. **Could an auditor ask how this was done?** → If yes, lean toward Process Critical.
+2. **Does someone need to review and approve the result?** → If yes, lean toward Human-in-the-Loop.
+3. **Does only the final product matter?** → If yes, lean toward Output-Driven.
 
-**Q8:** Will the system operate at *very large scale* (e.g., millions of identical transactions)?  
-- **Yes →** **Traditional data science**  
-- **No →** Go to **Q9**
-
-**Q9:** Will a human review, correct, or collaborate on outputs in real time?  
-- **Yes →** **LLM-based or Hybrid approach**  
-- **No →** Go to **Q10**
-
----
-
-## 4. Evaluation & Integration
-
-**Q10:** Can you define objective numeric metrics for success (accuracy, recall, error)?  
-- **Yes →** **Traditional data science**  
-- **No →** Go to **Q11**
-
-**Q11:** Can performance be evaluated by *subjective quality* or *human judgment* (e.g., clarity, persuasiveness)?  
-- **Yes →** **LLM-based or Hybrid approach**  
-- **No →** **Traditional data science**
-
----
-
-## 5. Strategic Considerations
-
-**Q12:** Would combining both approaches (e.g., ML → LLM → ML) provide complementary strengths?  
-- **Yes →** **Hybrid system**  
-- **No →** Go to **Q13**
-
-**Q13:** Do you expect the task definition or data format to evolve frequently?  
-- **Yes →** **LLM-based approach (more adaptable)**  
-- **No →** **Traditional data science (more stable)**
-
----
-
-### ✅ Summary Outcomes
-
-| Path Result | When to Use |
-| :--- | :--- |
-| **LLM-based** | When the problem involves language, ambiguous reasoning, creativity, or semantic understanding. |
-| **Traditional Data Science** | When the problem has numeric data, clear metrics, and a need for reproducibility or scalability. |
-| **Hybrid** | When structured analytics and generative reasoning complement each other (e.g., ML feature extraction + LLM interpretation). |
+When in doubt, start with more transparency. It's easier to loosen oversight than to explain why you skipped it.
