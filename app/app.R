@@ -231,7 +231,7 @@ character_config <- list(
   clarion = list(
     name = "Clarion",
     display_name = "Clarion (Reporting)",
-    image = NULL,
+    image = "whale.png",
     gear = NULL,
     gear_class = NULL,
     input_placeholder = "Tell me what you're working on or how you used AI...",
