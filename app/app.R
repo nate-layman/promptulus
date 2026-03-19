@@ -294,6 +294,7 @@ ui <- page_sidebar(
       .sidebar-header {
         position: relative;
         margin-bottom: 15px;
+        margin-top: 40px;
       }
 
       .sidebar-header h3 {
