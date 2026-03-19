@@ -406,10 +406,17 @@ ui <- page_sidebar(
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
 
+      .character-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 0 0 225px;
+      }
+
       .owl-container {
         position: relative;
-        flex: 0 0 225px;
-        height: 300px;
+        width: 225px;
+        height: 280px;
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -886,7 +893,7 @@ ui <- page_sidebar(
       # Deciding to Use AI
       div(class = "phase-section",
         div(class = "phase-title", "Deciding to Use AI"),
-        p(class = "phase-description", "Before you touch an AI tool, make sure you know whether you should be using one and how to break the work into manageable pieces."),
+        p(class = "phase-description", "Before you get started, make sure you can clearly describe the task you want to do, know how to break it down into manageable subtasks, and whether AI is appropriate for the task at hand."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "before")], function(char_id) {
             cfg <- character_config[[char_id]]
@@ -1021,10 +1028,12 @@ ui <- page_sidebar(
           }
         })
       ),
-      div(class = "owl-container",
-        uiOutput("character_image"),
-        div(class = "loading-gear", id = "loading_gear",
-          uiOutput("character_gear")
+      div(class = "character-column",
+        div(class = "owl-container",
+          uiOutput("character_image"),
+          div(class = "loading-gear", id = "loading_gear",
+            uiOutput("character_gear")
+          )
         ),
         uiOutput("character_name_label")
       ),
@@ -1187,7 +1196,7 @@ server <- function(input, output, session) {
   output$character_name_label <- renderUI({
     req(selected_character())
     config <- character_config[[selected_character()]]
-    div(class = "character-name-label", config$display_name)
+    div(class = "character-name-label", config$name)
   })
 
   output$sidebar_title <- renderUI({
