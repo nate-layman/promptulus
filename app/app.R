@@ -143,15 +143,22 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     greeting = "Hello! I am Mnemos. I help you decide what information to provide to the AI — and just as importantly, what to leave out. Click the arrow to my right for more information.",
-    principles_file = NULL,
-    system_prompt_file = NULL,
+    principles_file = "context_engineering_principles.md",
+    system_prompt_file = "mnemos_system_prompt.md",
     rating_icon = "none",
     sidebar_title = "About Mnemos",
     sidebar_description = HTML(
       "<p>Mnemos helps you manage <strong>what information</strong> the AI can see.</p>
-      <p><em>Coming soon!</em></p>"
+      <p>The key insight: AI's context window is like a desk with limited space. Everything you include competes for attention.</p>
+      <p>Type your task description, click Send, and the elephant will help you think about:</p>
+      <ul>
+        <li>What information the AI needs that it doesn't already know</li>
+        <li>How to organize and prioritize your context</li>
+        <li>What to leave out to keep the AI focused</li>
+      </ul>
+      <p>Refine your context strategy and resubmit.</p>"
     ),
-    active = FALSE,
+    active = TRUE,
     phase = "during",
     skill_label = "What does the AI need to know?",
     skill_description = "Information: Don't rely on the model's general knowledge — give it the specific context it needs. But don't overwhelm it with everything either. Curate what matters.",
@@ -164,15 +171,22 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     greeting = "Hello! I am Dialogos. I help you manage the back-and-forth with AI — when to continue, when to start fresh, and how to keep the conversation productive. Click the arrow to my right for more information.",
-    principles_file = NULL,
-    system_prompt_file = NULL,
+    principles_file = "conversation_management_principles.md",
+    system_prompt_file = "dialogos_system_prompt.md",
     rating_icon = "none",
     sidebar_title = "About Dialogos",
     sidebar_description = HTML(
       "<p>Dialogos teaches you to manage <strong>multi-turn conversations</strong> with AI.</p>
-      <p><em>Coming soon!</em></p>"
+      <p>The key insight: every message stays in the AI's memory, and old instructions compete with new ones.</p>
+      <p>Type your task description, click Send, and the parrot will help you think about:</p>
+      <ul>
+        <li>Whether to continue a conversation or start fresh</li>
+        <li>How to manage instruction drift and contradictions</li>
+        <li>When single-turn vs multi-turn works best</li>
+      </ul>
+      <p>Rethink your conversation strategy and resubmit.</p>"
     ),
-    active = FALSE,
+    active = TRUE,
     phase = "during",
     skill_label = "How do I manage the conversation?",
     skill_description = "Interaction: Every exchange shapes what the model remembers. Knowing when to continue, reset, or restructure keeps your AI sharp instead of confused.",
@@ -185,41 +199,55 @@ character_config <- list(
     image = "raccoon.png",
     gear = NULL,
     gear_class = NULL,
-    greeting = "Hello! I am Veridex. I help you evaluate whether AI output is accurate, reproducible, and trustworthy. Click the arrow to my right for more information.",
-    principles_file = NULL,
-    system_prompt_file = NULL,
+    greeting = "Hello! I am Veridex. I help you evaluate whether AI output is accurate, reproducible, and trustworthy. Trust but verify! Click the arrow to my right for more information.",
+    principles_file = "evaluation_principles.md",
+    system_prompt_file = "veridex_system_prompt.md",
     rating_icon = "none",
     sidebar_title = "About Veridex",
     sidebar_description = HTML(
       "<p>Veridex helps you <strong>evaluate</strong> AI output for accuracy and quality.</p>
-      <p><em>Coming soon!</em></p>"
+      <p>The key insight: AI can sound confident and still be completely wrong.</p>
+      <p>Type your task description, click Send, and the raccoon will help you think about:</p>
+      <ul>
+        <li>How to verify facts vs just checking fluency</li>
+        <li>Where to watch for hallucinations</li>
+        <li>How to match evaluation rigor to stakes</li>
+      </ul>
+      <p>Refine your evaluation strategy and resubmit.</p>"
     ),
-    active = FALSE,
+    active = TRUE,
     phase = "after",
     skill_label = "Is the output good?",
     skill_description = "Evaluation: AI can sound confident and still be wrong. Systematic evaluation catches errors before they become someone else's problem.",
     name_origin = "From Latin 'verus' (true) + 'index' (pointer) — pointing to the truth"
   ),
-  lucerna = list(
-    name = "Lucerna",
-    display_name = "Lucerna (Reporting)",
+  clarion = list(
+    name = "Clarion",
+    display_name = "Clarion (Reporting)",
     image = NULL,
     gear = NULL,
     gear_class = NULL,
-    greeting = "Hello! I am Lucerna. I help you document and explain your AI-assisted work so others can understand and reproduce it. Click the arrow to my right for more information.",
-    principles_file = NULL,
-    system_prompt_file = NULL,
+    greeting = "Hello! I am Clarion. I help you document and explain your AI-assisted work so others can understand and reproduce it. If you can't explain how you got here, you're not done yet! Click the arrow to my right for more information.",
+    principles_file = "reporting_principles.md",
+    system_prompt_file = "clarion_system_prompt.md",
     rating_icon = "none",
-    sidebar_title = "About Lucerna",
+    sidebar_title = "About Clarion",
     sidebar_description = HTML(
-      "<p>Lucerna helps you <strong>document and report</strong> your AI methodology.</p>
-      <p><em>Coming soon!</em></p>"
+      "<p>Clarion helps you <strong>document and report</strong> your AI methodology.</p>
+      <p>The key insight: undocumented work is invisible work — it can't be trusted, improved, or replicated.</p>
+      <p>Type your task description, click Send, and the whale will help you think about:</p>
+      <ul>
+        <li>What to disclose about AI use and when</li>
+        <li>How to document prompts, context, and changes</li>
+        <li>Matching documentation depth to stakes</li>
+      </ul>
+      <p>Refine your documentation strategy and resubmit.</p>"
     ),
-    active = FALSE,
+    active = TRUE,
     phase = "after",
     skill_label = "Can I explain what I did?",
     skill_description = "Reporting: If you can't explain how you got here, you're not done yet. Transparent reporting builds trust and lets others reproduce your work.",
-    name_origin = "From Latin 'lucerna' (lamp, lantern) — shedding light on the process"
+    name_origin = "From Latin 'clarus' (clear) + clarion (a trumpet) — broadcasting findings so they can't be missed"
   )
 )
 
@@ -533,6 +561,16 @@ ui <- page_sidebar(
         height: 1px;
         background: #ddd;
         margin: 2px 0;
+      }
+
+      .nav-group-label {
+        font-size: 9px;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
+        margin-top: 2px;
+        margin-bottom: -4px;
       }
 
       .character-icon.inactive {
@@ -904,7 +942,7 @@ ui <- page_sidebar(
   # ===== CHARACTER VIEW (hidden initially) =====
   div(id = "character_view", style = "display: none;",
     div(class = "top-section",
-      # Character navigation icons
+      # Character navigation icons (grouped by phase)
       div(class = "character-nav",
         # Home button (octopus)
         tags$img(
@@ -915,23 +953,56 @@ ui <- page_sidebar(
           onclick = "Shiny.setInputValue('go_home', Math.random(), {priority: 'event'})"
         ),
         div(class = "nav-separator"),
-        # All character icons
-        lapply(names(character_config), function(char_id) {
+        # Deciding to Use AI (2 characters)
+        span(class = "nav-group-label", "Deciding"),
+        lapply(names(character_config)[sapply(character_config, function(x) x$phase == "before")], function(char_id) {
           cfg <- character_config[[char_id]]
           if (is.null(cfg$image)) return(NULL)
-          icon_class <- if (cfg$active) "character-icon" else "character-icon inactive"
-          onclick_js <- if (cfg$active) {
-            paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})")
-          } else {
-            ""
-          }
           tags$img(
             src = cfg$image,
-            class = icon_class,
+            class = "character-icon",
             id = paste0("icon_", char_id),
-            onclick = onclick_js,
+            onclick = paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})"),
             title = paste0(cfg$name, " — ", cfg$name_origin)
           )
+        }),
+        div(class = "nav-separator"),
+        # Using AI (4 characters)
+        span(class = "nav-group-label", "Using"),
+        lapply(names(character_config)[sapply(character_config, function(x) x$phase == "during")], function(char_id) {
+          cfg <- character_config[[char_id]]
+          if (is.null(cfg$image)) return(NULL)
+          tags$img(
+            src = cfg$image,
+            class = "character-icon",
+            id = paste0("icon_", char_id),
+            onclick = paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})"),
+            title = paste0(cfg$name, " — ", cfg$name_origin)
+          )
+        }),
+        div(class = "nav-separator"),
+        # Understanding AI Outputs (2 characters)
+        span(class = "nav-group-label", "Checking"),
+        lapply(names(character_config)[sapply(character_config, function(x) x$phase == "after")], function(char_id) {
+          cfg <- character_config[[char_id]]
+          if (!is.null(cfg$image)) {
+            tags$img(
+              src = cfg$image,
+              class = "character-icon",
+              id = paste0("icon_", char_id),
+              onclick = paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})"),
+              title = paste0(cfg$name, " — ", cfg$name_origin)
+            )
+          } else {
+            div(
+              class = "character-icon",
+              id = paste0("icon_", char_id),
+              onclick = paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})"),
+              title = paste0(cfg$name, " — ", cfg$name_origin),
+              style = "display: flex; align-items: center; justify-content: center; background: #e0e0e0; font-size: 14px; color: #999;",
+              "\U0001F4A1"
+            )
+          }
         })
       ),
       div(class = "owl-container",
@@ -1080,7 +1151,11 @@ server <- function(input, output, session) {
   output$character_image <- renderUI({
     req(selected_character())
     config <- character_config[[selected_character()]]
-    tags$img(src = config$image, class = "owl-image", alt = config$name, title = config$name_origin)
+    if (!is.null(config$image)) {
+      tags$img(src = config$image, class = "owl-image", alt = config$name, title = config$name_origin)
+    } else {
+      div(class = "placeholder-img", style = "width: 150px; height: 150px; font-size: 48px;", "?")
+    }
   })
 
   output$character_gear <- renderUI({

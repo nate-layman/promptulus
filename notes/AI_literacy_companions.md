@@ -88,13 +88,13 @@ Skills for evaluating and documenting what AI produced.
 **Aesthetic:** TBD — steampunk raccoon with inspection goggles, mechanical hands, measurement tools
 **Status:** Coming soon (placeholder art exists)
 
-#### Lucerna the Firefly
+#### Clarion the Whale
 **Role:** Reporting
 **Skill:** Documents AI methodology with transparency and reproducibility
 **Core Philosophy:** "If you can't explain how you got here, you're not done yet"
-**Personality:** Illuminating, precise, methodical
-**Aesthetic:** TBD — steampunk firefly with brass lantern abdomen, blueprint wings
-**Status:** Future (needs art)
+**Personality:** Resonant, clear, far-reaching
+**Aesthetic:** TBD — steampunk whale with brass plating, gear-driven flukes
+**Status:** Active (needs art)
 
 ---
 
@@ -116,7 +116,7 @@ Skills for evaluating and documenting what AI produced.
 | Mnemos | Elephant | Context Engineering | During | Information |
 | Dialogos | Parrot | Conversation Management | During | Interaction |
 | Veridex | Raccoon | Evaluation | After | — |
-| Lucerna | Firefly | Reporting | After | — |
+| Clarion | Whale | Reporting | After | — |
 | Octavius | Octopus | Unifier (mascot) | Landing | — |
 
 ---
