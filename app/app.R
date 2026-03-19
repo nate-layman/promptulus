@@ -279,6 +279,7 @@ ui <- page_sidebar(
         border-radius: 50%;
         background-color: #e8e8e8;
         border: 1px solid #ccc;
+        right: 20px;
       }
       .bslib-sidebar-layout > .collapse-toggle:hover {
         background-color: #ddd;
