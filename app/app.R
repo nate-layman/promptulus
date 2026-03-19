@@ -264,6 +264,9 @@ ui <- page_sidebar(
       .bslib-sidebar-layout {
         --bslib-sidebar-width: 50% !important;
       }
+      .bslib-sidebar-layout > .main {
+        padding-right: 60px;
+      }
 
       /* Sidebar toggle */
       .bslib-sidebar-layout > .collapse-toggle {
