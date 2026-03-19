@@ -265,31 +265,23 @@ ui <- page_sidebar(
         --bslib-sidebar-width: 50% !important;
       }
 
-      /* Sidebar toggle with Principles label */
+      /* Sidebar toggle */
       .bslib-sidebar-layout > .collapse-toggle {
-        width: auto;
-        height: auto;
-        padding: 6px 12px;
+        width: 48px;
+        height: 48px;
         display: flex;
         align-items: center;
-        gap: 6px;
+        justify-content: center;
         z-index: 10;
-        border-radius: 6px;
-        background-color: rgba(44, 62, 80, 0.08);
-        border: 1px solid rgba(44, 62, 80, 0.2);
+        border-radius: 50%;
+        background-color: #e8e8e8;
+        border: 1px solid #ccc;
       }
       .bslib-sidebar-layout > .collapse-toggle:hover {
-        background-color: rgba(44, 62, 80, 0.15);
-      }
-      .bslib-sidebar-layout > .collapse-toggle::before {
-        content: 'Principles';
-        font-size: 13px;
-        font-weight: 500;
-        color: #2c3e50;
-        white-space: nowrap;
+        background-color: #ddd;
       }
       .bslib-sidebar-layout > .collapse-toggle .collapse-icon {
-        font-size: 18px;
+        font-size: 24px;
       }
       /* Hide sidebar toggle on landing page */
       body.on-landing .bslib-sidebar-layout > .collapse-toggle {
