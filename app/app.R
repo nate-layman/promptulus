@@ -30,6 +30,7 @@ character_config <- list(
     image = "squirrel.png",
     gear = "squirrel_gear.png",
     gear_class = "sequita-gear",
+    input_placeholder = "Describe a task you're considering using AI for...",
     greeting = "Hello! I am Sequita. Describe your task and I'll help you figure out whether it needs a transparent, auditable approach — or whether AI can take the lead. Click the arrow to my right for more information.",
     principles_file = "task_categorization_principles.md",
     system_prompt_file = "sequita_system_prompt.md",
@@ -58,6 +59,7 @@ character_config <- list(
     image = "crab.png",
     gear = "crab_gear.png",
     gear_class = "modulus-gear",
+    input_placeholder = "Paste a complex prompt or describe a multi-step task...",
     greeting = "Hello! I am Modulus. Show me your complex prompt and I'll help you break it into manageable, modular pieces! You can also click the arrow to my right for more information.",
     principles_file = "modularization_principles.md",
     system_prompt_file = "modulus_system_prompt.md",
@@ -86,6 +88,7 @@ character_config <- list(
     image = "turtle.png",
     gear = "turtle_gear.png",
     gear_class = "telosa-gear",
+    input_placeholder = "What are you trying to accomplish with AI? Describe your goal...",
     greeting = "Hello. I am Telosa. Your intent takes up space in the AI's context window — make it count. Tell me about your task and I'll help you clarify your goals, boundaries, and what happens if things don't go as planned. Click the arrow to my right for more information.",
     principles_file = "intent_engineering_principles.md",
     system_prompt_file = "telosa_system_prompt.md",
@@ -115,6 +118,7 @@ character_config <- list(
     image = "owl.png",
     gear = "owl_gear.png",
     gear_class = NULL,
+    input_placeholder = "Paste a prompt you'd like reviewed...",
     greeting = "Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.",
     principles_file = "prompting_principles.md",
     system_prompt_file = "promptulus_system_prompt.md",
@@ -142,6 +146,7 @@ character_config <- list(
     image = "elephant.png",
     gear = NULL,
     gear_class = NULL,
+    input_placeholder = "Describe your task and what documents or data you plan to give the AI...",
     greeting = "Hello! I am Mnemos. I help you decide what information to provide to the AI — and just as importantly, what to leave out. Click the arrow to my right for more information.",
     principles_file = "context_engineering_principles.md",
     system_prompt_file = "mnemos_system_prompt.md",
@@ -170,6 +175,7 @@ character_config <- list(
     image = "parrot.png",
     gear = NULL,
     gear_class = NULL,
+    input_placeholder = "Describe your task and how you plan to interact with the AI (single prompt? back-and-forth?)...",
     greeting = "Hello! I am Dialogos. I help you manage the back-and-forth with AI — when to continue, when to start fresh, and how to keep the conversation productive. Click the arrow to my right for more information.",
     principles_file = "conversation_management_principles.md",
     system_prompt_file = "dialogos_system_prompt.md",
@@ -199,6 +205,7 @@ character_config <- list(
     image = "raccoon.png",
     gear = NULL,
     gear_class = NULL,
+    input_placeholder = "Describe what AI produced and how you plan to check it...",
     greeting = "Hello! I am Veridex. I help you evaluate whether AI output is accurate, reproducible, and trustworthy. Trust but verify! Click the arrow to my right for more information.",
     principles_file = "evaluation_principles.md",
     system_prompt_file = "veridex_system_prompt.md",
@@ -227,6 +234,7 @@ character_config <- list(
     image = NULL,
     gear = NULL,
     gear_class = NULL,
+    input_placeholder = "Describe your AI-assisted task and how you plan to document it...",
     greeting = "Hello! I am Clarion. I help you document and explain your AI-assisted work so others can understand and reproduce it. If you can't explain how you got here, you're not done yet! Click the arrow to my right for more information.",
     principles_file = "reporting_principles.md",
     system_prompt_file = "clarion_system_prompt.md",
@@ -410,8 +418,16 @@ ui <- page_sidebar(
 
       .owl-image {
         max-width: 225px;
-        max-height: 300px;
+        max-height: 280px;
         height: auto;
+      }
+
+      .character-name-label {
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        color: #04354a;
+        margin-top: 4px;
       }
 
       .speech-bubble-container {
@@ -1009,7 +1025,8 @@ ui <- page_sidebar(
         uiOutput("character_image"),
         div(class = "loading-gear", id = "loading_gear",
           uiOutput("character_gear")
-        )
+        ),
+        uiOutput("character_name_label")
       ),
       div(class = "speech-bubble-container",
         div(class = "speech-bubble",
@@ -1099,8 +1116,9 @@ server <- function(input, output, session) {
     shinyjs::show("character_view")
     shinyjs::runjs("document.body.classList.remove('on-landing')")
 
-    # Update greeting text
+    # Update greeting text and input placeholder
     owl_text(config$greeting)
+    updateTextAreaInput(session, "user_input", placeholder = config$input_placeholder)
 
     # Reset state
     previous_principle("None")
@@ -1164,6 +1182,12 @@ server <- function(input, output, session) {
     if (!is.null(config$gear)) {
       tags$img(src = config$gear)
     }
+  })
+
+  output$character_name_label <- renderUI({
+    req(selected_character())
+    config <- character_config[[selected_character()]]
+    div(class = "character-name-label", config$display_name)
   })
 
   output$sidebar_title <- renderUI({
