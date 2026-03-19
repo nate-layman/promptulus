@@ -264,11 +264,7 @@ ui <- page_sidebar(
       .bslib-sidebar-layout {
         --bslib-sidebar-width: 50% !important;
       }
-      .bslib-sidebar-layout > .main {
-        padding-right: 60px;
-      }
-
-      /* Sidebar toggle */
+      /* Sidebar toggle - override left positioning only when collapsed */
       .bslib-sidebar-layout > .collapse-toggle {
         width: 48px;
         height: 48px;
@@ -279,7 +275,10 @@ ui <- page_sidebar(
         border-radius: 50%;
         background-color: #e8e8e8;
         border: 1px solid #ccc;
-        right: 20px;
+      }
+      .bslib-sidebar-layout.sidebar-collapsed.sidebar-right > .collapse-toggle {
+        left: unset !important;
+        right: 15px !important;
       }
       .bslib-sidebar-layout > .collapse-toggle:hover {
         background-color: #ddd;
@@ -357,6 +356,9 @@ ui <- page_sidebar(
       }
 
       /* ===== CHARACTER VIEW ===== */
+      #character_view {
+        margin-right: 35px;
+      }
       .top-section {
         display: flex;
         justify-content: space-between;
