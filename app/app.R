@@ -1111,6 +1111,14 @@ server <- function(input, output, session) {
     shinyjs::show("landing_view")
     shinyjs::hide("character_view")
     shinyjs::runjs("document.body.classList.add('on-landing')")
+    # Close sidebar if it was open (toggle is hidden on landing page)
+    shinyjs::runjs("
+      var layout = document.querySelector('.bslib-sidebar-layout');
+      if (layout && !layout.classList.contains('sidebar-collapsed')) {
+        var toggle = layout.querySelector('.collapse-toggle');
+        if (toggle) toggle.click();
+      }
+    ")
   })
 
   # Character selection handler
