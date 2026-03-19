@@ -31,7 +31,7 @@ character_config <- list(
     gear = "squirrel_gear.png",
     gear_class = "sequita-gear",
     input_placeholder = "Describe a task you're considering using AI for...",
-    greeting = "Hello! I am Sequita. Describe your task and I'll help you figure out whether it needs a transparent, auditable approach — or whether AI can take the lead. Click the arrow to my right for more information.",
+    greeting = "Hello! I am Sequita. Tell me what you're working on and I'll teach you about transparency — does your task need a clear paper trail, or is a good answer all that matters? Click the arrow to my right for more information.",
     principles_file = "task_categorization_principles.md",
     system_prompt_file = "sequita_system_prompt.md",
     rating_icon = "none",
@@ -45,7 +45,7 @@ character_config <- list(
         <li>Assess whether your task needs high or low transparency</li>
         <li>Explain what that means for choosing tools and methods</li>
       </ul>
-      <p>Your task stays in the text box so you can refine and resubmit.</p>"
+      <p>Describe different tasks to explore how transparency needs change across your work.</p>"
     ),
     active = TRUE,
     phase = "before",
@@ -89,7 +89,7 @@ character_config <- list(
     gear = "turtle_gear.png",
     gear_class = "telosa-gear",
     input_placeholder = "What are you trying to accomplish with AI? Describe your goal...",
-    greeting = "Hello. I am Telosa. Your intent takes up space in the AI's context window — make it count. Tell me about your task and I'll help you clarify your goals, boundaries, and what happens if things don't go as planned. Click the arrow to my right for more information.",
+    greeting = "Hello. I am Telosa. Tell me what you're working on and I'll help you think through your intent — what you actually need, who's accountable, and what happens if things don't go as planned. Click the arrow to my right for more information.",
     principles_file = "intent_engineering_principles.md",
     system_prompt_file = "telosa_system_prompt.md",
     rating_icon = "none",
@@ -104,7 +104,7 @@ character_config <- list(
         <li>What are the escape hatches if AI fails?</li>
         <li>What boundaries should AI respect?</li>
       </ul>
-      <p>Refine your intent and resubmit — the clearer your purpose, the better your results.</p>"
+      <p>Describe different tasks to explore how intent needs change across your work.</p>"
     ),
     active = TRUE,
     phase = "during",
@@ -147,7 +147,7 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     input_placeholder = "Describe your task and what documents or data you plan to give the AI...",
-    greeting = "Hello! I am Mnemos. I help you decide what information to provide to the AI — and just as importantly, what to leave out. Click the arrow to my right for more information.",
+    greeting = "Hello! I am Mnemos. Tell me what you're working on and I'll help you think about what information the AI needs — and just as importantly, what to leave out. Click the arrow to my right for more information.",
     principles_file = "context_engineering_principles.md",
     system_prompt_file = "mnemos_system_prompt.md",
     rating_icon = "none",
@@ -161,7 +161,7 @@ character_config <- list(
         <li>How to organize and prioritize your context</li>
         <li>What to leave out to keep the AI focused</li>
       </ul>
-      <p>Refine your context strategy and resubmit.</p>"
+      <p>Describe different tasks to explore how context needs change across your work.</p>"
     ),
     active = TRUE,
     phase = "during",
@@ -176,7 +176,7 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     input_placeholder = "Describe your task and how you plan to interact with the AI (single prompt? back-and-forth?)...",
-    greeting = "Hello! I am Dialogos. I help you manage the back-and-forth with AI — when to continue, when to start fresh, and how to keep the conversation productive. Click the arrow to my right for more information.",
+    greeting = "Hello! I am Dialogos. Tell me what you're working on and I'll help you think about managing the back-and-forth — when to continue, when to start fresh, and how to keep the conversation productive. Click the arrow to my right for more information.",
     principles_file = "conversation_management_principles.md",
     system_prompt_file = "dialogos_system_prompt.md",
     rating_icon = "none",
@@ -190,7 +190,7 @@ character_config <- list(
         <li>How to manage instruction drift and contradictions</li>
         <li>When single-turn vs multi-turn works best</li>
       </ul>
-      <p>Rethink your conversation strategy and resubmit.</p>"
+      <p>Describe different tasks to explore how conversation needs change across your work.</p>"
     ),
     active = TRUE,
     phase = "during",
@@ -205,8 +205,8 @@ character_config <- list(
     image = "raccoon.png",
     gear = NULL,
     gear_class = NULL,
-    input_placeholder = "Describe what AI produced and how you plan to check it...",
-    greeting = "Hello! I am Veridex. I help you evaluate whether AI output is accurate, reproducible, and trustworthy. Trust but verify! Click the arrow to my right for more information.",
+    input_placeholder = "Tell me what you're working on or what AI produced for you...",
+    greeting = "Hello! I am Veridex. Tell me what you're working on and I'll teach you what can go wrong with AI output — and how to catch it. Trust but verify! Click the arrow to my right for more information.",
     principles_file = "evaluation_principles.md",
     system_prompt_file = "veridex_system_prompt.md",
     rating_icon = "none",
@@ -220,7 +220,7 @@ character_config <- list(
         <li>Where to watch for hallucinations</li>
         <li>How to match evaluation rigor to stakes</li>
       </ul>
-      <p>Refine your evaluation strategy and resubmit.</p>"
+      <p>Describe different tasks to explore how evaluation needs change across your work.</p>"
     ),
     active = TRUE,
     phase = "after",
@@ -234,8 +234,8 @@ character_config <- list(
     image = NULL,
     gear = NULL,
     gear_class = NULL,
-    input_placeholder = "Describe your AI-assisted task and how you plan to document it...",
-    greeting = "Hello! I am Clarion. I help you document and explain your AI-assisted work so others can understand and reproduce it. If you can't explain how you got here, you're not done yet! Click the arrow to my right for more information.",
+    input_placeholder = "Tell me what you're working on or how you used AI...",
+    greeting = "Hello! I am Clarion. Tell me what you're working on and I'll help you think about documenting your AI-assisted work. If you can't explain how you got here, you're not done yet! Click the arrow to my right for more information.",
     principles_file = "reporting_principles.md",
     system_prompt_file = "clarion_system_prompt.md",
     rating_icon = "none",
@@ -249,7 +249,7 @@ character_config <- list(
         <li>How to document prompts, context, and changes</li>
         <li>Matching documentation depth to stakes</li>
       </ul>
-      <p>Refine your documentation strategy and resubmit.</p>"
+      <p>Describe different tasks to explore how documentation needs change across your work.</p>"
     ),
     active = TRUE,
     phase = "after",
