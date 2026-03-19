@@ -867,9 +867,11 @@ ui <- page_sidebar(
         tags$img(src = "octopus.png", class = "landing-mascot"),
         h1("The AI Literacy Companions"),
         p(class = "landing-subtitle",
-          "Hello! I'm Octavius. Using AI well isn't just about writing a good prompt. It's a whole workflow.",
-          " Knowing when to use AI, what to tell it, and how to check its work are all different skills.",
-          " My 8 companions each teach one."
+          "Hello! I'm Octavius. Think of AI like an eager junior employee — brilliant, fast, and desperate to please.",
+          " They'll do anything you ask without pushing back, even if your instructions are vague or your request doesn't quite make sense.",
+          " They won't tell you when they're guessing, and they'll never say \"I don't know.\"",
+          " Using AI well means learning to manage that employee — giving clear direction, providing the right reference materials,",
+          " and always checking their work. My 8 companions each teach one of these skills."
         )
       ),
 
