@@ -254,6 +254,7 @@ ui <- page_sidebar(
 
   tags$head(
     tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"),
+    tags$script(HTML("document.addEventListener('DOMContentLoaded', function() { document.body.classList.add('on-landing'); });")),
     tags$style(HTML("
       body {
         background-color: #f5f5f5;
@@ -264,33 +265,21 @@ ui <- page_sidebar(
         --bslib-sidebar-width: 50% !important;
       }
 
-      /* Make sidebar toggle arrow more visible */
+      /* Make sidebar toggle arrow bigger and visible */
       .bslib-sidebar-layout > .collapse-toggle {
-        background-color: #2c3e50;
-        border: 2px solid #fff;
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
+        width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        opacity: 1;
         z-index: 10;
-        animation: pulse-toggle 2s ease-in-out 3;
-      }
-      @keyframes pulse-toggle {
-        0%, 100% { box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
-        50% { box-shadow: 0 0 12px 4px rgba(44,62,80,0.6); }
-      }
-      .bslib-sidebar-layout > .collapse-toggle:hover {
-        background-color: #1a252f;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-        animation: none;
       }
       .bslib-sidebar-layout > .collapse-toggle .collapse-icon {
-        color: #fff;
-        font-size: 16px;
+        font-size: 22px;
+      }
+      /* Hide sidebar toggle on landing page */
+      body.on-landing .bslib-sidebar-layout > .collapse-toggle {
+        display: none;
       }
 
       .sidebar-header {
@@ -1009,6 +998,7 @@ server <- function(input, output, session) {
     previous_principle("None")
     shinyjs::show("landing_view")
     shinyjs::hide("character_view")
+    shinyjs::runjs("document.body.classList.add('on-landing')")
   })
 
   # Character selection handler
@@ -1023,6 +1013,7 @@ server <- function(input, output, session) {
     selected_character(char)
     shinyjs::hide("landing_view")
     shinyjs::show("character_view")
+    shinyjs::runjs("document.body.classList.remove('on-landing')")
 
     # Update greeting text
     owl_text(config$greeting)
