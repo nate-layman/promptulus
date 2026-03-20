@@ -1053,7 +1053,10 @@ ui <- page_sidebar(
                     placeholder = "Type your message here...",
                     width = "100%",
                     rows = 3),
-      actionButton("send_btn", "Send", class = "send-button")
+      div(style = "display: flex; justify-content: space-between; align-items: center;",
+        actionButton("send_btn", "Send", class = "send-button"),
+        uiOutput("reset_chat_btn")
+      )
     ),
 
     # TEMPORARILY DISABLED: Giscus discussion
@@ -1097,9 +1100,14 @@ server <- function(input, output, session) {
 
   # Reactive values
   owl_text <- reactiveVal("")
-  previous_principle <- reactiveVal("None")
+  previous_principle <- reactiveVal("None")  # Used by direct feedback characters (Promptulus, Modulus)
+  chat_object <- reactiveVal(NULL)           # Persistent chat for guided learning characters
   selected_character <- reactiveVal(NULL)
   app_view <- reactiveVal("landing")
+
+  # Direct feedback characters create a new chat each send (iterative prompt refinement)
+  # Guided learning characters persist the chat across turns (multi-turn teaching)
+  direct_feedback_characters <- c("promptulus", "modulus")
 
 
   # ===== NAVIGATION =====
@@ -1110,6 +1118,7 @@ server <- function(input, output, session) {
     selected_character(NULL)
     owl_text("")
     previous_principle("None")
+    chat_object(NULL)
     shinyjs::show("landing_view")
     shinyjs::hide("character_view")
     shinyjs::runjs("document.body.classList.add('on-landing')")
@@ -1143,6 +1152,7 @@ server <- function(input, output, session) {
 
     # Reset state
     previous_principle("None")
+    chat_object(NULL)
 
     # Update active icon styling
     for (cid in names(character_config)) {
@@ -1239,11 +1249,27 @@ server <- function(input, output, session) {
     }
   })
 
+  # Reset chat button - shown only for guided learning characters
+  output$reset_chat_btn <- renderUI({
+    req(selected_character())
+    if (!(selected_character() %in% direct_feedback_characters)) {
+      actionButton("reset_chat", "Start fresh",
+                    style = "background: none; border: 1px solid #ccc; color: #666; font-size: 13px; padding: 6px 15px; border-radius: 6px; cursor: pointer;")
+    }
+  })
+
+  observeEvent(input$reset_chat, {
+    chat_object(NULL)
+    config <- character_config[[selected_character()]]
+    owl_text(config$greeting)
+  })
+
   # ===== SEND BUTTON HANDLER =====
   observeEvent(input$send_btn, {
     req(selected_character())
     if (nchar(trimws(input$user_input)) > 0) {
       user_prompt <- input$user_input
+      is_direct_feedback <- selected_character() %in% direct_feedback_characters
 
       # Show loading gear
       shinyjs::addClass(id = "loading_gear", class = "fa-spin")
@@ -1270,28 +1296,38 @@ server <- function(input, output, session) {
         config <- character_config[[selected_character()]]
         cat(paste0("[LOG] Using character: ", config$name, "\n"))
 
-        # Read the principles file for the selected character
-        guidelines <- readLines(here::here(config$principles_file), warn = FALSE)
-        guidelines_text <- paste(guidelines, collapse = "\n")
+        # Get or create chat object
+        # Direct feedback characters (Promptulus, Modulus): new chat each send
+        # Guided learning characters: persistent multi-turn chat
+        if (is_direct_feedback || is.null(chat_object())) {
+          # Build system prompt
+          guidelines <- readLines(here::here(config$principles_file), warn = FALSE)
+          guidelines_text <- paste(guidelines, collapse = "\n")
+          system_prompt_template <- readLines(here::here(config$system_prompt_file), warn = FALSE)
+          system_prompt_text <- paste(system_prompt_template, collapse = "\n")
 
-        # Read the system prompt template
-        system_prompt_template <- readLines(here::here(config$system_prompt_file), warn = FALSE)
-        system_prompt_text <- paste(system_prompt_template, collapse = "\n")
+          system_prompt <- gsub("\\{\\{GUIDELINES\\}\\}", guidelines_text, system_prompt_text)
+          prev_principle <- previous_principle()
+          system_prompt <- gsub("\\{\\{PREVIOUS_PRINCIPLE\\}\\}", prev_principle, system_prompt)
 
-        # Replace placeholders
-        system_prompt <- gsub("\\{\\{GUIDELINES\\}\\}", guidelines_text, system_prompt_text)
-        prev_principle <- previous_principle()
-        system_prompt <- gsub("\\{\\{PREVIOUS_PRINCIPLE\\}\\}", prev_principle, system_prompt)
+          cat(paste0("[LOG] Creating new chat, system prompt length: ", nchar(system_prompt), " characters\n"))
 
-        cat(paste0("[LOG] System prompt created, length: ", nchar(system_prompt), " characters\n"))
+          chat_obj <- chat(
+            name = "google_gemini/gemini-2.5-flash",
+            system_prompt = system_prompt,
+            api_key = api_key,
+            echo = "none"
+          )
 
-        # Call LLM
-        chat_obj <- chat(
-          name = "google_gemini/gemini-2.5-flash",
-          system_prompt = system_prompt,
-          api_key = api_key,
-          echo = "none"
-        )
+          # Persist chat object for guided learning characters
+          if (!is_direct_feedback) {
+            chat_object(chat_obj)
+          }
+        } else {
+          # Reuse existing chat for guided learning (multi-turn)
+          chat_obj <- chat_object()
+          cat("[LOG] Reusing existing chat (multi-turn)\n")
+        }
 
         # Suppress httr2/cli retry messages and show our own longer notification
         response <- withCallingHandlers(
@@ -1325,22 +1361,14 @@ server <- function(input, output, session) {
           owl_text(response)
         }
 
-        # Extract principle name to avoid repetition
-        principle_match <- regmatches(response, regexpr("consider using the \\*\\*([^*]+)\\*\\*", response))
-        if (length(principle_match) > 0) {
-          principle_name <- gsub(".*\\*\\*([^*]+)\\*\\*.*", "\\1", principle_match[1])
-          previous_principle(principle_name)
-          cat(paste0("[LOG] Extracted principle: ", principle_name, "\n"))
-        }
-
-        # Also try extracting from Sequita/Telosa format: "Based on the **Principle Name** principle"
-        if (length(principle_match) == 0) {
-          alt_match <- regmatches(response, regexpr("Based on the \\*\\*([^*]+)\\*\\*", response))
-          if (length(alt_match) > 0) {
-            principle_name <- gsub(".*\\*\\*([^*]+)\\*\\*.*", "\\1", alt_match[1])
+        # Track previous principle for direct feedback characters only
+        if (is_direct_feedback) {
+          principle_match <- regmatches(response, regexpr("consider using the \\*\\*([^*]+)\\*\\*", response))
+          if (length(principle_match) > 0) {
+            principle_name <- gsub(".*\\*\\*([^*]+)\\*\\*.*", "\\1", principle_match[1])
             previous_principle(principle_name)
-            cat(paste0("[LOG] Extracted principle (alt): ", principle_name, "\n"))
-            }
+            cat(paste0("[LOG] Extracted principle: ", principle_name, "\n"))
+          }
         }
 
         shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
