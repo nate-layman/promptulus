@@ -1,7 +1,7 @@
 library(shiny)
 library(shinyjs)
 library(bslib)
-# library(ellmer)  # TEMPORARILY DISABLED: chat functionality
+library(ellmer)
 library(here)
 
 # Load environment variables from .Renviron file
@@ -875,22 +875,21 @@ ui <- page_sidebar(
         )
       ),
 
-      # TEMPORARILY DISABLED: API Key input (chat functionality disabled)
-      # div(class = "api-key-section",
-      #   h4("Getting Started"),
-      #   p("The interactive characters use Google's Gemini API. Enter your API key below to get started."),
-      #   div(class = "api-key-input-row",
-      #     passwordInput("api_key_input", label = NULL, placeholder = "Paste your Gemini API key here..."),
-      #     uiOutput("api_key_status")
-      #   ),
-      #   p(class = "api-key-help",
-      #     "Don't have a key? ",
-      #     tags$a(href = "https://aistudio.google.com/apikey",
-      #            target = "_blank",
-      #            "Click here for instructions on getting a free Gemini API key"),
-      #     "."
-      #   )
-      # ),
+      div(class = "api-key-section",
+        h4("Getting Started"),
+        p("The interactive characters use Google's Gemini API. Enter your API key below to get started."),
+        div(class = "api-key-input-row",
+          passwordInput("api_key_input", label = NULL, placeholder = "Paste your Gemini API key here..."),
+          uiOutput("api_key_status")
+        ),
+        p(class = "api-key-help",
+          "Don't have a key? ",
+          tags$a(href = "https://aistudio.google.com/apikey",
+                 target = "_blank",
+                 "Click here for instructions on getting a free Gemini API key"),
+          "."
+        )
+      ),
 
       # Deciding to Use AI
       div(class = "phase-section",
@@ -1048,21 +1047,20 @@ ui <- page_sidebar(
       )
     ),
 
-    # TEMPORARILY DISABLED: chat input section
-    # div(class = "input-section",
-    #   textAreaInput("user_input",
-    #                 label = NULL,
-    #                 placeholder = "Type your message here...",
-    #                 width = "100%",
-    #                 rows = 3),
-    #   actionButton("send_btn", "Send", class = "send-button")
-    # ),
+    div(class = "input-section",
+      textAreaInput("user_input",
+                    label = NULL,
+                    placeholder = "Type your message here...",
+                    width = "100%",
+                    rows = 3),
+      actionButton("send_btn", "Send", class = "send-button")
+    ),
 
-    # Giscus discussion - dynamically loaded per character
-    div(class = "giscus-section",
-      h3("Discussion"),
-      div(id = "giscus-container")
-    )
+    # TEMPORARILY DISABLED: Giscus discussion
+    # div(class = "giscus-section",
+    #   h3("Discussion"),
+    #   div(id = "giscus-container")
+    # )
   )
 )
 
@@ -1086,13 +1084,13 @@ server <- function(input, output, session) {
     removeModal()
   })
 
-  # TEMPORARILY DISABLED: Pre-fill API key from URL parameter (?key=...)
-  # observe({
-  #   query <- parseQueryString(session$clientData$url_search)
-  #   if (!is.null(query$key) && nchar(query$key) > 0) {
-  #     updateTextInput(session, "api_key_input", value = query$key)
-  #   }
-  # }) |> bindEvent(session$clientData$url_search, once = TRUE)
+  # Pre-fill API key from URL parameter (?key=...)
+  observe({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query$key) && nchar(query$key) > 0) {
+      updateTextInput(session, "api_key_input", value = query$key)
+    }
+  }) |> bindEvent(session$clientData$url_search, once = TRUE)
 
   # Reactive values
   owl_text <- reactiveVal("")
@@ -1160,28 +1158,28 @@ server <- function(input, output, session) {
       shinyjs::addClass(id = "loading_gear", class = config$gear_class)
     }
 
-    # Inject giscus script dynamically for the selected character
-    shinyjs::runjs(paste0("
-      var container = document.getElementById('giscus-container');
-      container.innerHTML = '';
-      var script = document.createElement('script');
-      script.src = 'https://giscus.app/client.js';
-      script.setAttribute('data-repo', 'nate-layman/promptulus');
-      script.setAttribute('data-repo-id', 'R_kgDOQPUupA');
-      script.setAttribute('data-category', 'Character Discussions');
-      script.setAttribute('data-category-id', 'DIC_kwDOQPUupM4CxtCy');
-      script.setAttribute('data-mapping', 'specific');
-      script.setAttribute('data-term', '", char, "-discussion');
-      script.setAttribute('data-strict', '0');
-      script.setAttribute('data-reactions-enabled', '1');
-      script.setAttribute('data-emit-metadata', '0');
-      script.setAttribute('data-input-position', 'bottom');
-      script.setAttribute('data-theme', 'preferred_color_scheme');
-      script.setAttribute('data-lang', 'en');
-      script.setAttribute('crossorigin', 'anonymous');
-      script.async = true;
-      container.appendChild(script);
-    "))
+    # TEMPORARILY DISABLED: Giscus discussion script injection
+    # shinyjs::runjs(paste0("
+    #   var container = document.getElementById('giscus-container');
+    #   container.innerHTML = '';
+    #   var script = document.createElement('script');
+    #   script.src = 'https://giscus.app/client.js';
+    #   script.setAttribute('data-repo', 'nate-layman/promptulus');
+    #   script.setAttribute('data-repo-id', 'R_kgDOQPUupA');
+    #   script.setAttribute('data-category', 'Character Discussions');
+    #   script.setAttribute('data-category-id', 'DIC_kwDOQPUupM4CxtCy');
+    #   script.setAttribute('data-mapping', 'specific');
+    #   script.setAttribute('data-term', '", char, "-discussion');
+    #   script.setAttribute('data-strict', '0');
+    #   script.setAttribute('data-reactions-enabled', '1');
+    #   script.setAttribute('data-emit-metadata', '0');
+    #   script.setAttribute('data-input-position', 'bottom');
+    #   script.setAttribute('data-theme', 'preferred_color_scheme');
+    #   script.setAttribute('data-lang', 'en');
+    #   script.setAttribute('crossorigin', 'anonymous');
+    #   script.async = true;
+    #   container.appendChild(script);
+    # "))
   })
 
   # ===== RENDER UI ELEMENTS =====
@@ -1228,131 +1226,129 @@ server <- function(input, output, session) {
     HTML(response_text)
   })
 
-  # TEMPORARILY DISABLED: API key status indicator
-  # output$api_key_status <- renderUI({
-  #   key <- input$api_key_input
-  #   env_key <- Sys.getenv("GEMINI_API_KEY")
-  #   if (!is.null(key) && nchar(trimws(key)) > 0) {
-  #     span(class = "api-key-status", style = "color: #4CAF50;", icon("check-circle"), " Key entered")
-  #   } else {
-  #     NULL
-  #   }
-  # })
+  output$api_key_status <- renderUI({
+    key <- input$api_key_input
+    env_key <- Sys.getenv("GEMINI_API_KEY")
+    if (!is.null(key) && nchar(trimws(key)) > 0) {
+      span(class = "api-key-status", style = "color: #4CAF50;", icon("check-circle"), " Key entered")
+    } else {
+      NULL
+    }
+  })
 
   # ===== SEND BUTTON HANDLER =====
-  # TEMPORARILY DISABLED: chat functionality
-  # observeEvent(input$send_btn, {
-  #   req(selected_character())
-  #   if (nchar(trimws(input$user_input)) > 0) {
-  #     user_prompt <- input$user_input
-  #
-  #     # Show loading gear
-  #     shinyjs::addClass(id = "loading_gear", class = "fa-spin")
-  #
-  #     # Call Google Gemini API using ellmer
-  #     tryCatch({
-  #       cat("[LOG] Send button clicked\n")
-  #
-  #       # Prefer user-provided key, fall back to environment variable
-  #       user_key <- input$api_key_input
-  #       api_key <- if (!is.null(user_key) && nchar(trimws(user_key)) > 0) {
-  #         trimws(user_key)
-  #       } else {
-  #         Sys.getenv("GEMINI_API_KEY")
-  #       }
-  #
-  #       if (api_key == "") {
-  #         cat("[LOG] ERROR: No API key available\n")
-  #         owl_text("Please enter your Gemini API key on the landing page (click the octopus to go back).")
-  #         shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
-  #         return()
-  #       }
-  #
-  #       config <- character_config[[selected_character()]]
-  #       cat(paste0("[LOG] Using character: ", config$name, "\n"))
-  #
-  #       # Read the principles file for the selected character
-  #       guidelines <- readLines(here::here(config$principles_file), warn = FALSE)
-  #       guidelines_text <- paste(guidelines, collapse = "\n")
-  #
-  #       # Read the system prompt template
-  #       system_prompt_template <- readLines(here::here(config$system_prompt_file), warn = FALSE)
-  #       system_prompt_text <- paste(system_prompt_template, collapse = "\n")
-  #
-  #       # Replace placeholders
-  #       system_prompt <- gsub("\\{\\{GUIDELINES\\}\\}", guidelines_text, system_prompt_text)
-  #       prev_principle <- previous_principle()
-  #       system_prompt <- gsub("\\{\\{PREVIOUS_PRINCIPLE\\}\\}", prev_principle, system_prompt)
-  #
-  #       cat(paste0("[LOG] System prompt created, length: ", nchar(system_prompt), " characters\n"))
-  #
-  #       # Call LLM
-  #       chat_obj <- chat(
-  #         name = "google_gemini/gemini-2.5-flash",
-  #         system_prompt = system_prompt,
-  #         api_key = api_key,
-  #         echo = "none"
-  #       )
-  #
-  #       # Suppress httr2/cli retry messages and show our own longer notification
-  #       response <- withCallingHandlers(
-  #         chat_obj$chat(paste0("Please review this prompt:\n\n", user_prompt)),
-  #         message = function(m) {
-  #           msg <- conditionMessage(m)
-  #           if (grepl("retry|throttl|wait|429|rate", msg, ignore.case = TRUE)) {
-  #             showNotification(
-  #               "The API is busy. Retrying...",
-  #               type = "warning",
-  #               duration = 5
-  #             )
-  #             invokeRestart("muffleMessage")
-  #           }
-  #         }
-  #       )
-  #
-  #       cat("[LOG] API response received\n")
-  #       cat(paste0("[LOG] Response length: ", nchar(response), " characters\n"))
-  #
-  #       # For Sequita: parse zone and append spectrum visualization
-  #       if (selected_character() == "sequita") {
-  #         zone_match <- regmatches(response, regexpr("\\[TRANSPARENCY: (high|low)\\]", response))
-  #         zone <- NULL
-  #         if (length(zone_match) > 0) {
-  #           zone <- gsub("\\[TRANSPARENCY: |\\]", "", zone_match[1])
-  #           response <- gsub("\\s*\\[TRANSPARENCY: [^]]+\\]\\s*", "", response)
-  #         }
-  #         owl_text(paste0(response, if (!is.null(zone)) spectrum_html(zone) else ""))
-  #       } else {
-  #         owl_text(response)
-  #       }
-  #
-  #       # Extract principle name to avoid repetition
-  #       principle_match <- regmatches(response, regexpr("consider using the \\*\\*([^*]+)\\*\\*", response))
-  #       if (length(principle_match) > 0) {
-  #         principle_name <- gsub(".*\\*\\*([^*]+)\\*\\*.*", "\\1", principle_match[1])
-  #         previous_principle(principle_name)
-  #         cat(paste0("[LOG] Extracted principle: ", principle_name, "\n"))
-  #       }
-  #
-  #       # Also try extracting from Sequita/Telosa format: "Based on the **Principle Name** principle"
-  #       if (length(principle_match) == 0) {
-  #         alt_match <- regmatches(response, regexpr("Based on the \\*\\*([^*]+)\\*\\*", response))
-  #         if (length(alt_match) > 0) {
-  #           principle_name <- gsub(".*\\*\\*([^*]+)\\*\\*.*", "\\1", alt_match[1])
-  #           previous_principle(principle_name)
-  #           cat(paste0("[LOG] Extracted principle (alt): ", principle_name, "\n"))
-  #           }
-  #       }
-  #
-  #       shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
-  #
-  #     }, error = function(e) {
-  #       cat(paste0("[LOG] ERROR: ", conditionMessage(e), "\n"))
-  #       owl_text(paste0("Error analyzing prompt: ", conditionMessage(e)))
-  #       shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
-  #     })
-  #   }
-  # })
+  observeEvent(input$send_btn, {
+    req(selected_character())
+    if (nchar(trimws(input$user_input)) > 0) {
+      user_prompt <- input$user_input
+
+      # Show loading gear
+      shinyjs::addClass(id = "loading_gear", class = "fa-spin")
+
+      # Call Google Gemini API using ellmer
+      tryCatch({
+        cat("[LOG] Send button clicked\n")
+
+        # Prefer user-provided key, fall back to environment variable
+        user_key <- input$api_key_input
+        api_key <- if (!is.null(user_key) && nchar(trimws(user_key)) > 0) {
+          trimws(user_key)
+        } else {
+          Sys.getenv("GEMINI_API_KEY")
+        }
+
+        if (api_key == "") {
+          cat("[LOG] ERROR: No API key available\n")
+          owl_text("Please enter your Gemini API key on the landing page (click the octopus to go back).")
+          shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
+          return()
+        }
+
+        config <- character_config[[selected_character()]]
+        cat(paste0("[LOG] Using character: ", config$name, "\n"))
+
+        # Read the principles file for the selected character
+        guidelines <- readLines(here::here(config$principles_file), warn = FALSE)
+        guidelines_text <- paste(guidelines, collapse = "\n")
+
+        # Read the system prompt template
+        system_prompt_template <- readLines(here::here(config$system_prompt_file), warn = FALSE)
+        system_prompt_text <- paste(system_prompt_template, collapse = "\n")
+
+        # Replace placeholders
+        system_prompt <- gsub("\\{\\{GUIDELINES\\}\\}", guidelines_text, system_prompt_text)
+        prev_principle <- previous_principle()
+        system_prompt <- gsub("\\{\\{PREVIOUS_PRINCIPLE\\}\\}", prev_principle, system_prompt)
+
+        cat(paste0("[LOG] System prompt created, length: ", nchar(system_prompt), " characters\n"))
+
+        # Call LLM
+        chat_obj <- chat(
+          name = "google_gemini/gemini-2.5-flash",
+          system_prompt = system_prompt,
+          api_key = api_key,
+          echo = "none"
+        )
+
+        # Suppress httr2/cli retry messages and show our own longer notification
+        response <- withCallingHandlers(
+          chat_obj$chat(paste0("Please review this prompt:\n\n", user_prompt)),
+          message = function(m) {
+            msg <- conditionMessage(m)
+            if (grepl("retry|throttl|wait|429|rate", msg, ignore.case = TRUE)) {
+              showNotification(
+                "The API is busy. Retrying...",
+                type = "warning",
+                duration = 5
+              )
+              invokeRestart("muffleMessage")
+            }
+          }
+        )
+
+        cat("[LOG] API response received\n")
+        cat(paste0("[LOG] Response length: ", nchar(response), " characters\n"))
+
+        # For Sequita: parse zone and append spectrum visualization
+        if (selected_character() == "sequita") {
+          zone_match <- regmatches(response, regexpr("\\[TRANSPARENCY: (high|low)\\]", response))
+          zone <- NULL
+          if (length(zone_match) > 0) {
+            zone <- gsub("\\[TRANSPARENCY: |\\]", "", zone_match[1])
+            response <- gsub("\\s*\\[TRANSPARENCY: [^]]+\\]\\s*", "", response)
+          }
+          owl_text(paste0(response, if (!is.null(zone)) spectrum_html(zone) else ""))
+        } else {
+          owl_text(response)
+        }
+
+        # Extract principle name to avoid repetition
+        principle_match <- regmatches(response, regexpr("consider using the \\*\\*([^*]+)\\*\\*", response))
+        if (length(principle_match) > 0) {
+          principle_name <- gsub(".*\\*\\*([^*]+)\\*\\*.*", "\\1", principle_match[1])
+          previous_principle(principle_name)
+          cat(paste0("[LOG] Extracted principle: ", principle_name, "\n"))
+        }
+
+        # Also try extracting from Sequita/Telosa format: "Based on the **Principle Name** principle"
+        if (length(principle_match) == 0) {
+          alt_match <- regmatches(response, regexpr("Based on the \\*\\*([^*]+)\\*\\*", response))
+          if (length(alt_match) > 0) {
+            principle_name <- gsub(".*\\*\\*([^*]+)\\*\\*.*", "\\1", alt_match[1])
+            previous_principle(principle_name)
+            cat(paste0("[LOG] Extracted principle (alt): ", principle_name, "\n"))
+            }
+        }
+
+        shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
+
+      }, error = function(e) {
+        cat(paste0("[LOG] ERROR: ", conditionMessage(e), "\n"))
+        owl_text(paste0("Error analyzing prompt: ", conditionMessage(e)))
+        shinyjs::removeClass(id = "loading_gear", class = "fa-spin")
+      })
+    }
+  })
 
   # ===== GUIDELINES SIDEBAR =====
   output$guidelines_content <- renderUI({
