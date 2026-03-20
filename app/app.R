@@ -440,7 +440,7 @@ ui <- page_sidebar(
       .speech-bubble-container {
         flex: 1;
         margin-left: 30px;
-        height: 300px;
+        min-height: 300px;
         display: flex;
       }
 
@@ -1076,6 +1076,9 @@ server <- function(input, output, session) {
     p("The advice from any individual character is educational. It should not be used to make",
       "definitive judgments about specific tasks. Always consult your institution's policies and",
       "use professional judgment."),
+    p(tags$strong("Do not submit sensitive, confidential, or personally identifiable information."),
+      "Your inputs are sent to a third-party AI service (Google Gemini) for processing.",
+      "Use generic or anonymized examples when describing your tasks."),
     footer = actionButton("dismiss_disclaimer", "I understand", class = "btn-primary"),
     easyClose = FALSE
   ))
