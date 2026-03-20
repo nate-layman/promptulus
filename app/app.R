@@ -235,7 +235,7 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     input_placeholder = "Tell me what you're working on or how you used AI...",
-    greeting = "Hello! I am Clarion. Tell me what you're working on and I'll help you think about documenting your AI-assisted work. If you can't explain how you got here, you're not done yet! Click the arrow to my right for more information.",
+    greeting = "Hello! I am Clarion. Tell me what you're working on and I'll help you think about documenting your AI-assisted work. If someone can't reproduce your results from what you've documented, you're not done yet! Click the arrow to my right for more information.",
     principles_file = "reporting_principles.md",
     system_prompt_file = "clarion_system_prompt.md",
     rating_icon = "none",
