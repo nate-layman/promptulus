@@ -831,6 +831,92 @@ ui <- page_sidebar(
         margin-top: 4px;
       }
 
+      /* ===== CONVERSATION NAVIGATOR (Dialogos only) ===== */
+      .conversation-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 8px 15px;
+        margin-top: 10px;
+        background: #f0f4f8;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #555;
+      }
+
+      .conversation-nav .nav-arrow {
+        background: none;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        color: #555;
+        transition: all 0.2s ease;
+        padding: 0;
+        line-height: 1;
+      }
+
+      .conversation-nav .nav-arrow:hover:not(:disabled) {
+        background: #e3f2fd;
+        border-color: #2196F3;
+        color: #2196F3;
+      }
+
+      .conversation-nav .nav-arrow:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+
+      .conversation-nav .nav-label {
+        font-weight: 500;
+        min-width: 100px;
+        text-align: center;
+      }
+
+      .conversation-nav .nav-context {
+        font-size: 11px;
+        color: #888;
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .history-viewing-banner {
+        font-size: 11px;
+        color: #888;
+        font-style: italic;
+        text-align: center;
+        padding: 4px 0;
+      }
+
+      .history-user-input {
+        background: #f9f9f9;
+        border-left: 3px solid #ccc;
+        padding: 8px 12px;
+        margin-bottom: 10px;
+        font-size: 13px;
+        color: #666;
+        border-radius: 0 6px 6px 0;
+        max-height: 60px;
+        overflow-y: auto;
+      }
+
+      .history-user-input .history-label {
+        font-weight: 600;
+        font-size: 11px;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+      }
+
       .placeholder-img {
         width: 70px;
         height: 70px;
@@ -1047,6 +1133,8 @@ ui <- page_sidebar(
       )
     ),
 
+    uiOutput("conversation_nav"),
+
     div(class = "input-section",
       textAreaInput("user_input",
                     label = NULL,
@@ -1105,6 +1193,10 @@ server <- function(input, output, session) {
   selected_character <- reactiveVal(NULL)
   app_view <- reactiveVal("landing")
 
+  # Dialogos conversation history
+  dialogos_history <- reactiveVal(list())    # list of list(user_input, response)
+  dialogos_view_index <- reactiveVal(0L)     # 0 = current/live, 1..N = viewing historical turn
+
   # Direct feedback characters create a new chat each send (iterative prompt refinement)
   # Guided learning characters persist the chat across turns (multi-turn teaching)
   direct_feedback_characters <- c("promptulus", "modulus")
@@ -1119,6 +1211,8 @@ server <- function(input, output, session) {
     owl_text("")
     previous_principle("None")
     chat_object(NULL)
+    dialogos_history(list())
+    dialogos_view_index(0L)
     shinyjs::show("landing_view")
     shinyjs::hide("character_view")
     shinyjs::runjs("document.body.classList.add('on-landing')")
@@ -1153,6 +1247,8 @@ server <- function(input, output, session) {
     # Reset state
     previous_principle("None")
     chat_object(NULL)
+    dialogos_history(list())
+    dialogos_view_index(0L)
 
     # Update active icon styling
     for (cid in names(character_config)) {
@@ -1236,7 +1332,23 @@ server <- function(input, output, session) {
   output$owl_response <- renderUI({
     response_text <- gsub("\\*\\*([^*]+)\\*\\*", "<strong>\\1</strong>", owl_text())
     response_text <- gsub("\n", "<br>", response_text)
-    HTML(response_text)
+
+    # Show user's input when viewing Dialogos history
+    history_header <- NULL
+    if (!is.null(selected_character()) && selected_character() == "dialogos") {
+      view_idx <- dialogos_view_index()
+      history <- dialogos_history()
+      if (length(history) > 0) {
+        display_turn <- if (view_idx == 0L) length(history) else view_idx
+        entry <- history[[display_turn]]
+        history_header <- div(class = "history-user-input",
+          div(class = "history-label", "You said:"),
+          entry$user_input
+        )
+      }
+    }
+
+    tagList(history_header, HTML(response_text))
   })
 
   output$api_key_status <- renderUI({
@@ -1260,8 +1372,92 @@ server <- function(input, output, session) {
 
   observeEvent(input$reset_chat, {
     chat_object(NULL)
+    dialogos_history(list())
+    dialogos_view_index(0L)
     config <- character_config[[selected_character()]]
     owl_text(config$greeting)
+  })
+
+  # Conversation navigator - shown only for Dialogos when there's history
+  output$conversation_nav <- renderUI({
+    req(selected_character() == "dialogos")
+    history <- dialogos_history()
+    if (length(history) == 0) return(NULL)
+
+    view_idx <- dialogos_view_index()
+    total <- length(history)
+    is_live <- (view_idx == 0L)
+    display_turn <- if (is_live) total else view_idx
+
+    # Truncated user input for context
+    current_entry <- history[[display_turn]]
+    input_preview <- substr(current_entry$user_input, 1, 50)
+    if (nchar(current_entry$user_input) > 50) {
+      input_preview <- paste0(input_preview, "...")
+    }
+
+    prev_attrs <- if (display_turn <= 1) {
+      list(class = "nav-arrow", disabled = "disabled")
+    } else {
+      list(class = "nav-arrow",
+           onclick = "Shiny.setInputValue('nav_prev', Math.random(), {priority: 'event'})")
+    }
+    next_attrs <- if (is_live) {
+      list(class = "nav-arrow", disabled = "disabled")
+    } else {
+      list(class = "nav-arrow",
+           onclick = "Shiny.setInputValue('nav_next', Math.random(), {priority: 'event'})")
+    }
+
+    div(class = "conversation-nav",
+      do.call(tags$button, c(prev_attrs, list(HTML('<i class="fa fa-chevron-left"></i>')))),
+      span(class = "nav-label",
+        if (is_live) {
+          paste0("Turn ", total, " of ", total)
+        } else {
+          paste0("Turn ", view_idx, " of ", total)
+        }
+      ),
+      do.call(tags$button, c(next_attrs, list(HTML('<i class="fa fa-chevron-right"></i>')))),
+      if (!is_live) {
+        span(class = "nav-context", "Viewing history")
+      }
+    )
+  })
+
+  # Navigate to previous turn
+  observeEvent(input$nav_prev, {
+    history <- dialogos_history()
+    if (length(history) == 0) return()
+    view_idx <- dialogos_view_index()
+    total <- length(history)
+    current_turn <- if (view_idx == 0L) total else view_idx
+    if (current_turn > 1) {
+      new_idx <- current_turn - 1L
+      dialogos_view_index(new_idx)
+      entry <- history[[new_idx]]
+      owl_text(entry$response)
+    }
+  })
+
+  # Navigate to next turn
+  observeEvent(input$nav_next, {
+    history <- dialogos_history()
+    if (length(history) == 0) return()
+    view_idx <- dialogos_view_index()
+    if (view_idx == 0L) return()  # Already at live
+    total <- length(history)
+    if (view_idx < total) {
+      new_idx <- view_idx + 1L
+      dialogos_view_index(new_idx)
+      entry <- history[[new_idx]]
+      owl_text(entry$response)
+    } else {
+      # Back to live view
+      dialogos_view_index(0L)
+      entry <- history[[total]]
+      owl_text(entry$response)
+    }
   })
 
   # ===== SEND BUTTON HANDLER =====
@@ -1270,6 +1466,11 @@ server <- function(input, output, session) {
     if (nchar(trimws(input$user_input)) > 0) {
       user_prompt <- input$user_input
       is_direct_feedback <- selected_character() %in% direct_feedback_characters
+
+      # Snap Dialogos back to live view when sending
+      if (selected_character() == "dialogos") {
+        dialogos_view_index(0L)
+      }
 
       # Show loading gear
       shinyjs::addClass(id = "loading_gear", class = "fa-spin")
@@ -1347,6 +1548,17 @@ server <- function(input, output, session) {
 
         cat("[LOG] API response received\n")
         cat(paste0("[LOG] Response length: ", nchar(response), " characters\n"))
+
+        # Store conversation turn for Dialogos history
+        if (selected_character() == "dialogos") {
+          history <- dialogos_history()
+          history[[length(history) + 1]] <- list(
+            user_input = user_prompt,
+            response = response
+          )
+          dialogos_history(history)
+          dialogos_view_index(0L)  # Snap to live view
+        }
 
         # For Sequita: parse zone and append spectrum visualization
         if (selected_character() == "sequita") {
