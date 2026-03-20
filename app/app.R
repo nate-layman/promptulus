@@ -254,7 +254,7 @@ character_config <- list(
     active = TRUE,
     phase = "after",
     skill_label = "Can I explain what I did?",
-    skill_description = "Reporting: If you can't explain how you got here well enough for someone to reproduce your work, you're not done yet. Particularly since that someone will probably just end up being you in the future.",
+    skill_description = "Clarion teaches the white whale of AI skills: documenting what you've done well enough that your work can be reproduced.",
     name_origin = "From Latin 'clarus' (clear) + clarion (a trumpet), broadcasting findings so they can't be missed"
   )
 )
