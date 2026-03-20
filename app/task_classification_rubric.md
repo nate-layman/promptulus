@@ -12,7 +12,7 @@ Think of it like modeling: Are you trying to understand something about how a sy
 
 | Level | Description | What It Means |
 | :--- | :--- | :--- |
-| **High Transparency** | Someone needs to see and understand how the work was done. The method matters — for auditing, for learning, for trust, or for building on the work later. | Use transparent, explainable methods. Spreadsheets, documented procedures, reproducible analyses. AI shouldn't lead the core work. |
+| **High Transparency** | Someone needs to see and understand how the work was done. The method matters: for auditing, for learning, for trust, or for building on the work later. | Use transparent, explainable methods. Spreadsheets, documented procedures, reproducible analyses. AI shouldn't lead the core work. |
 | **Low Transparency** | Only the accuracy and quality of the final product matters. Nobody asks how you got there. | AI can take the lead. Focus your energy on checking the result, not documenting the process. |
 
 ---

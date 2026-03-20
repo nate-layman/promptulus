@@ -91,9 +91,9 @@ Skills for evaluating and documenting what AI produced.
 #### Clarion the Whale
 **Role:** Reporting
 **Skill:** Documents AI methodology with transparency and reproducibility
-**Core Philosophy:** "If you can't explain how you got here, you're not done yet"
+**Core Philosophy:** "If you can't explain how you got here well enough for someone to reproduce your work, you're not done yet. Reproducibility is important. Particularly since that someone will probably just end up being you in the future."
 **Personality:** Resonant, clear, far-reaching
-**Aesthetic:** TBD — steampunk whale with brass plating, gear-driven flukes
+**Aesthetic:** TBD, steampunk whale with brass plating, gear-driven flukes
 **Status:** Active (needs art)
 
 ---

@@ -31,7 +31,7 @@ character_config <- list(
     gear = "squirrel_gear.png",
     gear_class = "sequita-gear",
     input_placeholder = "Describe a task you're considering using AI for...",
-    greeting = "Hello! I am Sequita. Tell me what you're working on and I'll teach you about transparency — does your task need a clear paper trail, or is a good answer all that matters? Click the arrow to my right for more information.",
+    greeting = "Hello! I am Sequita. Tell me what you're working on and I'll teach you about transparency. Does your task need a clear paper trail, or is a good answer all that matters? Click the arrow to my right for more information.",
     principles_file = "task_categorization_principles.md",
     system_prompt_file = "sequita_system_prompt.md",
     rating_icon = "none",
@@ -39,7 +39,7 @@ character_config <- list(
     sidebar_description = HTML(
       "<p>Sequita helps you determine whether <strong>transparency</strong> matters for your task.</p>
       <p>The key question: <em>Do you need to understand the cause, or just the effect?</em></p>
-      <p>Think of it like forecasting: sometimes you need to know <em>why</em> a prediction was right — what assumptions were made, whether the reasoning holds for new situations. Other times you just need an accurate forecast and the inner workings don't matter.</p>
+      <p>Think of it like forecasting: sometimes you need to know <em>why</em> a prediction was right: what assumptions were made, whether the reasoning holds for new situations. Other times you just need an accurate forecast and the inner workings don't matter.</p>
       <p>Type your task description, click Send, and the squirrel will:</p>
       <ul>
         <li>Assess whether your task needs high or low transparency</li>
@@ -50,8 +50,8 @@ character_config <- list(
     active = TRUE,
     phase = "before",
     skill_label = "Should I use AI?",
-    skill_description = "Transparency: Some tasks need a clear paper trail — others just need a good answer. Knowing the difference keeps you out of trouble.",
-    name_origin = "From Latin 'sequi' (to follow/trace) — tracing the reasoning behind a result"
+    skill_description = "Transparency: Some tasks need a clear paper trail; others just need a good answer. Knowing the difference keeps you out of trouble.",
+    name_origin = "From Latin 'sequi' (to follow/trace), tracing the reasoning behind a result"
   ),
   modulus = list(
     name = "Modulus",
@@ -79,7 +79,7 @@ character_config <- list(
     phase = "before",
     skill_label = "How do I break this down?",
     skill_description = "Decomposition: Complex tasks overwhelm AI. Breaking them into steps gets better results and lets you catch errors early.",
-    name_origin = "From Latin 'modulus' (small measure) — breaking big problems into measured pieces"
+    name_origin = "From Latin 'modulus' (small measure), breaking big problems into measured pieces"
   ),
   # --- DURING AI (Context Window Disciplines) ---
   telosa = list(
@@ -89,7 +89,7 @@ character_config <- list(
     gear = "turtle_gear.png",
     gear_class = "telosa-gear",
     input_placeholder = "What are you trying to accomplish with AI? Describe your goal...",
-    greeting = "Hello. I am Telosa. Tell me what you're working on and I'll help you think through your intent — what you actually need, who's accountable, and what happens if things don't go as planned. Click the arrow to my right for more information.",
+    greeting = "Hello. I am Telosa. Tell me what you're working on and I'll help you think through your intent: what you actually need, who's accountable, and what happens if things don't go as planned. Click the arrow to my right for more information.",
     principles_file = "intent_engineering_principles.md",
     system_prompt_file = "telosa_system_prompt.md",
     rating_icon = "none",
@@ -109,8 +109,8 @@ character_config <- list(
     active = TRUE,
     phase = "during",
     skill_label = "What's my intent?",
-    skill_description = "Intent: Without clear intent, AI may take shortcuts you never intended — including unsafe ones. Define the goal and the guardrails.",
-    name_origin = "From Greek 'telos' (\u03c4\u03ad\u03bb\u03bf\u03c2) — purpose, end, goal"
+    skill_description = "Intent: Without clear intent, AI may take shortcuts you never intended, including unsafe ones. Define the goal and the guardrails.",
+    name_origin = "From Greek 'telos' (\u03c4\u03ad\u03bb\u03bf\u03c2), meaning purpose, end, goal"
   ),
   promptulus = list(
     name = "Promptulus",
@@ -138,7 +138,7 @@ character_config <- list(
     phase = "during",
     skill_label = "How do I ask?",
     skill_description = "Instructions: How you phrase a request dramatically changes what you get back. Small wording changes yield big differences.",
-    name_origin = "From Latin 'promptus' (ready, prepared) — preparing effective requests"
+    name_origin = "From Latin 'promptus' (ready, prepared), preparing effective requests"
   ),
   mnemos = list(
     name = "Mnemos",
@@ -147,7 +147,7 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     input_placeholder = "Describe your task and what documents or data you plan to give the AI...",
-    greeting = "Hello! I am Mnemos. Tell me what you're working on and I'll help you think about what information the AI needs — and just as importantly, what to leave out. Click the arrow to my right for more information.",
+    greeting = "Hello! I am Mnemos. Tell me what you're working on and I'll help you think about what information the AI needs, and just as importantly, what to leave out. Click the arrow to my right for more information.",
     principles_file = "context_engineering_principles.md",
     system_prompt_file = "mnemos_system_prompt.md",
     rating_icon = "none",
@@ -166,8 +166,8 @@ character_config <- list(
     active = TRUE,
     phase = "during",
     skill_label = "What does the AI need to know?",
-    skill_description = "Information: Don't rely on the model's general knowledge — give it the specific context it needs. But don't overwhelm it with everything either. Curate what matters.",
-    name_origin = "From Greek 'mneme' (\u03bc\u03bd\u03ae\u03bc\u03b7) — memory. The elephant never forgets."
+    skill_description = "Information: Don't rely on the model's general knowledge. Give it the specific context it needs. But don't overwhelm it with everything either. Curate what matters.",
+    name_origin = "From Greek 'mneme' (\u03bc\u03bd\u03ae\u03bc\u03b7), meaning memory. The elephant never forgets."
   ),
   dialogos = list(
     name = "Dialogos",
@@ -176,7 +176,7 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     input_placeholder = "Describe your task and how you plan to interact with the AI (single prompt? back-and-forth?)...",
-    greeting = "Hello! I am Dialogos. Tell me what you're working on and I'll help you think about managing the back-and-forth — when to continue, when to start fresh, and how to keep the conversation productive. Click the arrow to my right for more information.",
+    greeting = "Hello! I am Dialogos. Tell me what you're working on and I'll help you think about managing the back-and-forth: when to continue, when to start fresh, and how to keep the conversation productive. Click the arrow to my right for more information.",
     principles_file = "conversation_management_principles.md",
     system_prompt_file = "dialogos_system_prompt.md",
     rating_icon = "none",
@@ -196,7 +196,7 @@ character_config <- list(
     phase = "during",
     skill_label = "How do I manage the conversation?",
     skill_description = "Interaction: Every exchange shapes what the model remembers. Knowing when to continue, reset, or restructure keeps your AI sharp instead of confused.",
-    name_origin = "From Greek 'dialogos' (\u03b4\u03b9\u03ac\u03bb\u03bf\u03b3\u03bf\u03c2) — conversation, dialogue"
+    name_origin = "From Greek 'dialogos' (\u03b4\u03b9\u03ac\u03bb\u03bf\u03b3\u03bf\u03c2), meaning conversation, dialogue"
   ),
   # --- AFTER AI (Quality) ---
   veridex = list(
@@ -206,7 +206,7 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     input_placeholder = "Tell me what you're working on or what AI produced for you...",
-    greeting = "Hello! I am Veridex. Tell me what you're working on and I'll teach you what can go wrong with AI output — and how to catch it. Trust but verify! Click the arrow to my right for more information.",
+    greeting = "Hello! I am Veridex. Tell me what you're working on and I'll teach you what can go wrong with AI output, and how to catch it. Trust but verify! Click the arrow to my right for more information.",
     principles_file = "evaluation_principles.md",
     system_prompt_file = "veridex_system_prompt.md",
     rating_icon = "none",
@@ -226,7 +226,7 @@ character_config <- list(
     phase = "after",
     skill_label = "Is the output good?",
     skill_description = "Evaluation: AI can sound confident and still be wrong. Systematic evaluation catches errors before they become someone else's problem.",
-    name_origin = "From Latin 'verus' (true) + 'index' (pointer) — pointing to the truth"
+    name_origin = "From Latin 'verus' (true) + 'index' (pointer), pointing to the truth"
   ),
   clarion = list(
     name = "Clarion",
@@ -235,14 +235,14 @@ character_config <- list(
     gear = NULL,
     gear_class = NULL,
     input_placeholder = "Tell me what you're working on or how you used AI...",
-    greeting = "Hello! I am Clarion. Tell me what you're working on and I'll help you think about documenting your AI-assisted work. If someone can't reproduce your results from what you've documented, you're not done yet! Click the arrow to my right for more information.",
+    greeting = "Hello! I am Clarion. Tell me what you're working on and I'll help you think about documenting your AI-assisted work. If you can't explain how you got here well enough for someone to reproduce your work, you're not done yet. Particularly since that someone will probably just end up being you in the future! Click the arrow to my right for more information.",
     principles_file = "reporting_principles.md",
     system_prompt_file = "clarion_system_prompt.md",
     rating_icon = "none",
     sidebar_title = "About Clarion",
     sidebar_description = HTML(
       "<p>Clarion helps you <strong>document and report</strong> your AI methodology.</p>
-      <p>The key insight: undocumented work is invisible work — it can't be trusted, improved, or replicated.</p>
+      <p>The key insight: undocumented work is invisible work. It can't be trusted, improved, or replicated.</p>
       <p>Type your task description, click Send, and the whale will help you think about:</p>
       <ul>
         <li>What to disclose about AI use and when</li>
@@ -254,8 +254,8 @@ character_config <- list(
     active = TRUE,
     phase = "after",
     skill_label = "Can I explain what I did?",
-    skill_description = "Reporting: If you can't explain how you got here, you're not done yet. Transparent reporting builds trust and lets others reproduce your work.",
-    name_origin = "From Latin 'clarus' (clear) + clarion (a trumpet) — broadcasting findings so they can't be missed"
+    skill_description = "Reporting: If you can't explain how you got here well enough for someone to reproduce your work, you're not done yet. Particularly since that someone will probably just end up being you in the future.",
+    name_origin = "From Latin 'clarus' (clear) + clarion (a trumpet), broadcasting findings so they can't be missed"
   )
 )
 
@@ -867,10 +867,10 @@ ui <- page_sidebar(
         tags$img(src = "octopus.png", class = "landing-mascot"),
         h1("The AI Literacy Companions"),
         p(class = "landing-subtitle",
-          "Hello! I'm Octavius. Think of AI like an eager junior employee — brilliant, fast, and desperate to please.",
+          "Hello! I'm Octavius. Think of AI like an eager junior employee: brilliant, fast, and desperate to please.",
           " They'll do anything you ask without pushing back, even if your instructions are vague or your request doesn't quite make sense.",
           " They won't tell you when they're guessing, and they'll never say \"I don't know.\"",
-          " Using AI well means learning to manage that employee — giving clear direction, providing the right reference materials,",
+          " Using AI well means learning to manage that employee: giving clear direction, providing the right reference materials,",
           " and always checking their work. My 8 companions each teach one of these skills."
         )
       ),
@@ -988,7 +988,7 @@ ui <- page_sidebar(
             class = "character-icon",
             id = paste0("icon_", char_id),
             onclick = paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})"),
-            title = paste0(cfg$name, " — ", cfg$name_origin)
+            title = paste0(cfg$name, ": ", cfg$name_origin)
           )
         }),
         div(class = "nav-separator"),
@@ -1002,7 +1002,7 @@ ui <- page_sidebar(
             class = "character-icon",
             id = paste0("icon_", char_id),
             onclick = paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})"),
-            title = paste0(cfg$name, " — ", cfg$name_origin)
+            title = paste0(cfg$name, ": ", cfg$name_origin)
           )
         }),
         div(class = "nav-separator"),
@@ -1016,14 +1016,14 @@ ui <- page_sidebar(
               class = "character-icon",
               id = paste0("icon_", char_id),
               onclick = paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})"),
-              title = paste0(cfg$name, " — ", cfg$name_origin)
+              title = paste0(cfg$name, ": ", cfg$name_origin)
             )
           } else {
             div(
               class = "character-icon",
               id = paste0("icon_", char_id),
               onclick = paste0("Shiny.setInputValue('char_select', '", char_id, "', {priority: 'event'})"),
-              title = paste0(cfg$name, " — ", cfg$name_origin),
+              title = paste0(cfg$name, ": ", cfg$name_origin),
               style = "display: flex; align-items: center; justify-content: center; background: #e0e0e0; font-size: 14px; color: #999;",
               "\U0001F4A1"
             )
