@@ -168,6 +168,7 @@ function buildContextSlider() {
     <p class="slider-subtitle">Drag the handles to see how you might allocate the context window for different tasks.</p>
     <div class="slider-bar">${regionsHTML}</div>
     <div class="preset-buttons">${presetsHTML}</div>
+    <p class="slider-subtitle" style="margin-top: 1em; font-style: italic;">See Dialogos above for more on managing the context window over the course of a conversation.</p>
   `;
 
   // Wire up preset buttons
