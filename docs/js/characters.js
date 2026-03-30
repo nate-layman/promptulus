@@ -88,7 +88,7 @@ export const characters = {
     gear: null,
     gearClass: null,
     inputPlaceholder: "Describe your task and what documents or data you plan to give the AI...",
-    greeting: "Hello! I am Mnemos. Tell me what you're working on and I'll help you think about what information the AI needs, and just as importantly, what to leave out. Click the arrow to my right for more information.",
+    greeting: "Hello! I am Mnemos. Tell me what you're working on and I'll help you think about what information the AI needs, and just as importantly, what to leave out. For example, each character on this site gets the information in their sidebar as context! Click the arrow to my right to see mine.",
     principlesFile: "context_engineering_principles.md",
     systemPromptFile: "mnemos_system_prompt.md",
     ratingIcon: "none",
