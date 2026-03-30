@@ -377,21 +377,8 @@ function selectCharacter(charId) {
   $('character-image').alt = config.name;
   $('character-name-label').textContent = config.name;
 
-  // Update gear
-  const gearImg = $('gear-image');
-  const gearContainer = $('loading-gear');
-  if (config.gear) {
-    gearImg.src = `images/${config.gear}`;
-    gearImg.style.display = '';
-  } else {
-    gearImg.style.display = 'none';
-  }
-
-  // Reset gear classes
-  gearContainer.className = 'loading-gear';
-  if (config.gearClass) {
-    gearContainer.classList.add(config.gearClass);
-  }
+  // Reset loading spinner
+  $('loading-gear').classList.remove('spinning');
 
   // Update greeting
   setBubbleText(config.greeting);

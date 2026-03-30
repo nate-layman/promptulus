@@ -143,55 +143,23 @@ body {
 /* ===== LOADING GEAR ===== */
 .loading-gear {
   position: absolute;
-  top: 12%;
-  left: 50%;
-  margin-left: -25px;
-  margin-top: -25px;
-  width: 50px;
-  height: 50px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transform-origin: 50% 50%;
-  color: #04354a;
+  bottom: 8px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  opacity: 0;
   pointer-events: none;
+  animation: gear-spin 4s linear infinite;
+  transition: opacity 0.3s;
 }
 
-.loading-gear.modulus-gear {
-  top: 54%;
-  left: 50.5%;
-}
-
-.loading-gear.sequita-gear {
-  left: 35%;
-}
-
-.loading-gear.telosa-gear {
-  top: 39%;
-  left: 39%;
-  width: 58px;
-  height: 58px;
-  margin-left: -29px;
-  margin-top: -29px;
-}
-
-.loading-gear.telosa-gear img {
-  width: 58px;
-  height: 58px;
+.loading-gear.spinning {
+  opacity: 0.6;
 }
 
 @keyframes gear-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-.loading-gear img {
-  width: 50px;
-  height: 50px;
-}
-
-.loading-gear.spinning img {
-  animation: gear-spin 15s linear infinite;
 }
 
 /* ===== CHARACTER VIEW ===== */
