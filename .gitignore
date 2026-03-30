@@ -15,7 +15,6 @@
 
 # Deployment directories
 site/
-docs/
 
 # rsconnect deployment info (contains account details)
 rsconnect/
@@ -39,4 +38,3 @@ tmp/
 temp/
 
 .claude/**
-docs/**

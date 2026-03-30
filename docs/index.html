@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The AI Literacy Companions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Welcome Modal -->
+<div id="welcome-modal" class="modal-overlay">
+  <div class="modal-dialog">
+    <h2>Welcome to the AI Literacy Companions</h2>
+    <p>This project is designed to teach you how to <em>think about</em> using AI. Each character highlights an important discipline in the AI workflow.</p>
+    <p>The advice from any individual character is educational. It should not be used to make definitive judgments about specific tasks. Always consult your institution's policies and use professional judgment.</p>
+    <p><strong>Do not submit sensitive, confidential, or personally identifiable information.</strong> Your inputs are sent to a third-party AI service (Google Gemini) for processing. Use generic or anonymized examples when describing your tasks.</p>
+    <button class="btn-primary" id="dismiss-modal">I understand</button>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <h3 id="sidebar-title"></h3>
+  </div>
+  <div id="sidebar-description"></div>
+  <hr>
+  <div id="sidebar-guidelines"></div>
+</div>
+<button id="sidebar-toggle" class="sidebar-toggle hidden">
+  <i class="fa fa-chevron-left"></i>
+</button>
+
+<!-- Landing Page -->
+<div id="landing-view">
+  <div class="landing-container">
+    <div class="landing-header">
+      <img src="images/octopus.png" class="landing-mascot" alt="Octavius">
+      <h1>The AI Literacy Companions</h1>
+      <p class="landing-subtitle">
+        Hello! I'm Octavius. Think of AI like an eager junior employee: brilliant, fast, and desperate to please.
+        They'll do anything you ask without pushing back, even if your instructions are vague or your request doesn't quite make sense.
+        They won't tell you when they're guessing, and they'll never say "I don't know."
+        Using AI well means learning to manage that employee: giving clear direction, providing the right reference materials,
+        and always checking their work. My 8 companions each teach one of these skills.
+      </p>
+    </div>
+
+    <div class="api-key-section">
+      <h4>Getting Started</h4>
+      <p>The interactive characters use Google's Gemini API. Enter your API key below to get started.</p>
+      <div class="api-key-input-row">
+        <input type="password" id="api-key-input" placeholder="Paste your Gemini API key here...">
+        <span id="api-key-status"></span>
+      </div>
+      <p class="api-key-help">
+        Don't have a key? <a href="https://aistudio.google.com/apikey" target="_blank">Click here for instructions on getting a free Gemini API key</a>.
+      </p>
+    </div>
+
+    <!-- Phase sections populated by JS -->
+    <div id="phase-sections"></div>
+  </div>
+</div>
+
+<!-- Character View (hidden initially) -->
+<div id="character-view" style="display: none;">
+  <div class="top-section">
+    <!-- Character navigation -->
+    <div class="character-nav" id="character-nav"></div>
+
+    <div class="character-column">
+      <div class="owl-container">
+        <img id="character-image" class="owl-image" src="" alt="">
+        <div class="loading-gear" id="loading-gear">
+          <img id="gear-image" src="" alt="">
+        </div>
+      </div>
+      <div class="character-name-label" id="character-name-label"></div>
+    </div>
+
+    <div class="speech-bubble-container">
+      <div class="speech-bubble">
+        <div class="bubble-text" id="bubble-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conversation navigator (Dialogos only) -->
+  <div id="conversation-nav-container"></div>
+
+  <div class="input-section">
+    <textarea id="user-input" class="user-input" rows="3" placeholder="Type your message here..."></textarea>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <button id="send-btn" class="send-button">Send</button>
+      <button id="reset-btn" class="reset-button" style="display: none;">Start fresh</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
