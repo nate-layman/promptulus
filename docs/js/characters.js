@@ -197,7 +197,7 @@ export const characters = {
     gear: null,
     gearClass: null,
     inputPlaceholder: "Tell me what you're working on or what AI produced for you...",
-    greeting: "Hello! I am Veridex. Tell me what you're working on and I'll teach you what can go wrong with AI output, and how to catch it. Trust but verify! Click the arrow to my right for more information.",
+    greeting: "Hello! I am Veridex. Tell me what you're working on and I'll help you think about how to measure the accuracy of your AI workflows. Everyone makes mistakes, even humans! We should always know how well our processes are performing. Click the arrow to my right for more information.",
     principlesFile: "evaluation_principles.md",
     systemPromptFile: "veridex_system_prompt.md",
     ratingIcon: "none",
