@@ -168,7 +168,7 @@ export const characters = {
     gear: null,
     gearClass: null,
     inputPlaceholder: "Ask me about how AI models work, environmental impact, data privacy, or anything else you're curious about...",
-    greeting: "Hello! I am Vitrea. Ask me about how AI models actually work - tokenization, prediction, environmental impact, where your data goes, or anything else you're curious about. I'll explain it in plain language. Click the arrow to my right for more information.",
+    greeting: "Hello! I am Vitrea. Ask me about how AI models actually work - tokenization, prediction, environmental impact, where your data goes, or anything else you're curious about. I'll explain it in plain language. Click the arrow to my right for more information about the topics I can help you with.",
     principlesFile: "ai_transparency_principles.md",
     systemPromptFile: "vitrea_system_prompt.md",
     ratingIcon: "none",
