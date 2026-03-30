@@ -112,34 +112,6 @@ character_config <- list(
     skill_description = "Intent: Without clear intent, AI may take shortcuts you never intended, including unsafe ones. Define the goal and the guardrails.",
     name_origin = "From Greek 'telos' (\u03c4\u03ad\u03bb\u03bf\u03c2), meaning purpose, end, goal"
   ),
-  promptulus = list(
-    name = "Promptulus",
-    display_name = "Promptulus (Prompt Engineering)",
-    image = "owl.png",
-    gear = "owl_gear.png",
-    gear_class = NULL,
-    input_placeholder = "Paste a prompt you'd like reviewed...",
-    greeting = "Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.",
-    principles_file = "prompting_principles.md",
-    system_prompt_file = "promptulus_system_prompt.md",
-    rating_icon = "mice",
-    sidebar_title = "About Promptulus",
-    sidebar_description = HTML(
-      "<p>Promptulus reviews your LLM prompts and helps you improve them.</p>
-      <p>Type your prompt in the text box, click Send, and the owl will:</p>
-      <ul>
-        <li>Rate your prompt (1-5 mice, where 5 is excellent)</li>
-        <li>Provide constructive feedback</li>
-        <li>Suggest improvements based on proven prompt engineering principles</li>
-      </ul>
-      <p>Your prompt stays in the text box so you can iterate and refine it based on the suggestions.</p>"
-    ),
-    active = TRUE,
-    phase = "during",
-    skill_label = "How do I ask?",
-    skill_description = "Instructions: How you phrase a request dramatically changes what you get back. Small wording changes yield big differences.",
-    name_origin = "From Latin 'promptus' (ready, prepared), preparing effective requests"
-  ),
   mnemos = list(
     name = "Mnemos",
     display_name = "Mnemos (Context Engineering)",
@@ -168,6 +140,34 @@ character_config <- list(
     skill_label = "What does the AI need to know?",
     skill_description = "Information: Don't rely on the model's general knowledge. Give it the specific context it needs. But don't overwhelm it with everything either. Curate what matters.",
     name_origin = "From Greek 'mneme' (\u03bc\u03bd\u03ae\u03bc\u03b7), meaning memory. The elephant never forgets."
+  ),
+  promptulus = list(
+    name = "Promptulus",
+    display_name = "Promptulus (Prompt Engineering)",
+    image = "owl.png",
+    gear = "owl_gear.png",
+    gear_class = NULL,
+    input_placeholder = "Paste a prompt you'd like reviewed...",
+    greeting = "Hello! I am Promptulus. Give me your prompt and I'll review it! You can also click the arrow to my right for more information.",
+    principles_file = "prompting_principles.md",
+    system_prompt_file = "promptulus_system_prompt.md",
+    rating_icon = "mice",
+    sidebar_title = "About Promptulus",
+    sidebar_description = HTML(
+      "<p>Promptulus reviews your LLM prompts and helps you improve them.</p>
+      <p>Type your prompt in the text box, click Send, and the owl will:</p>
+      <ul>
+        <li>Rate your prompt (1-5 mice, where 5 is excellent)</li>
+        <li>Provide constructive feedback</li>
+        <li>Suggest improvements based on proven prompt engineering principles</li>
+      </ul>
+      <p>Your prompt stays in the text box so you can iterate and refine it based on the suggestions.</p>"
+    ),
+    active = TRUE,
+    phase = "during",
+    skill_label = "How do I ask?",
+    skill_description = "Instructions: How you phrase a request dramatically changes what you get back. Small wording changes yield big differences.",
+    name_origin = "From Latin 'promptus' (ready, prepared), preparing effective requests"
   ),
   dialogos = list(
     name = "Dialogos",
@@ -1023,10 +1023,10 @@ ui <- page_sidebar(
         )
       ),
 
-      # Understanding AI Outputs
+      # Understanding AI
       div(class = "phase-section",
-        div(class = "phase-title", "Understanding AI Outputs"),
-        p(class = "phase-description", "AI can sound confident and still be wrong. These skills help you verify what it produced and document how you got there."),
+        div(class = "phase-title", "Understanding AI"),
+        p(class = "phase-description", "AI can sound confident and still be wrong. These skills help you verify what it produced, document how you got there, and understand what's happening under the hood."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "after")], function(char_id) {
             cfg <- character_config[[char_id]]
@@ -1091,7 +1091,7 @@ ui <- page_sidebar(
           )
         }),
         div(class = "nav-separator"),
-        # Understanding AI Outputs (2 characters)
+        # Understanding AI (2 characters)
         span(class = "nav-group-label", "Checking"),
         lapply(names(character_config)[sapply(character_config, function(x) x$phase == "after")], function(char_id) {
           cfg <- character_config[[char_id]]
