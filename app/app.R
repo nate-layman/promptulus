@@ -241,20 +241,21 @@ character_config <- list(
     rating_icon = "none",
     sidebar_title = "About Clarion",
     sidebar_description = HTML(
-      "<p>Clarion helps you <strong>document and report</strong> your AI methodology.</p>
-      <p>The key insight: undocumented work is invisible work. It can't be trusted, improved, or replicated.</p>
+      "<p>Clarion helps you <strong>document, report, and build accountability</strong> for your AI-assisted work.</p>
+      <p>The key insight: documentation isn't just good practice - it's your protection. If something goes wrong but you followed your institution's guidelines and recorded your process, you have evidence of due diligence. Undocumented work can't be defended, improved, or replicated.</p>
       <p>Type your task description, click Send, and the whale will help you think about:</p>
       <ul>
         <li>What to disclose about AI use and when</li>
         <li>How to document prompts, context, and changes</li>
         <li>Matching documentation depth to stakes</li>
+        <li>Building a paper trail that demonstrates responsible use</li>
       </ul>
       <p>Describe different tasks to explore how documentation needs change across your work.</p>"
     ),
     active = TRUE,
     phase = "after",
     skill_label = "Can I explain what I did?",
-    skill_description = "Clarion teaches the white whale of AI skills: documenting what you've done well enough that your work can be reproduced.",
+    skill_description = "Accountability: Documenting what you did and why protects you. If something goes wrong but you followed guidelines and recorded your process, you have a paper trail showing due diligence.",
     name_origin = "From Latin 'clarus' (clear) + clarion (a trumpet), broadcasting findings so they can't be missed"
   )
 )
