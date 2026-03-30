@@ -71,7 +71,7 @@ function buildLandingPage() {
     {
       phase: 'during',
       title: 'Using AI: Intent, Instructions, Information, Interaction',
-      description: "Intent, instructions, information, and interaction all compete for the model's attention. Getting the balance right between these four is what separates useful AI output from noise."
+      description: "Intent, instructions, information, and interaction all compete for the model's attention, which is called the 'context window'. Getting the balance right between these four is what separates useful AI output from noise."
     },
     {
       phase: 'after',
@@ -105,7 +105,186 @@ function buildLandingPage() {
       </div>
     `;
     container.appendChild(section);
+
+    // Add context window slider after the "during" phase
+    if (phase === 'during') {
+      const slider = buildContextSlider();
+      section.appendChild(slider);
+      initSliderDrag(slider);
+    }
   }
+}
+
+// ===== CONTEXT WINDOW SLIDER =====
+const SLIDER_REGIONS = [
+  { key: 'intent',       label: 'Intent',       color: '#5B8C3E', charId: 'telosa' },
+  { key: 'information',  label: 'Information',   color: '#C4960C', charId: 'mnemos' },
+  { key: 'instructions', label: 'Instructions',  color: '#1B6B7A', charId: 'promptulus' },
+  { key: 'conversation', label: 'Conversation',  color: '#2A9D8F', charId: 'dialogos' }
+];
+
+const SLIDER_PRESETS = {
+  compliance:  { label: 'Compliance review',  values: [40, 30, 20, 10] },
+  draft:       { label: 'Draft a description', values: [10, 50, 25, 15] },
+  iterative:   { label: 'Iterative editing',   values: [10, 20, 15, 55] },
+  scoping:     { label: 'New task scoping',     values: [50, 20, 15, 15] }
+};
+
+const MIN_REGION_PCT = 5;
+
+function buildContextSlider() {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'context-slider-section';
+
+  const widths = [25, 25, 25, 25];
+
+  // Build regions HTML
+  const regionsHTML = SLIDER_REGIONS.map((r, i) =>
+    `<div class="slider-region" data-index="${i}" style="width:${widths[i]}%; background:${r.color};">
+      <span class="region-label">${r.label}</span>
+      <span class="region-pct">${widths[i]}%</span>
+    </div>`
+  ).join('');
+
+  // Build preset buttons
+  const presetsHTML = Object.entries(SLIDER_PRESETS).map(([key, p]) =>
+    `<button class="preset-btn" data-preset="${key}">${p.label}</button>`
+  ).join('');
+
+  wrapper.innerHTML = `
+    <h4>The Context Window</h4>
+    <p class="slider-subtitle">Drag the handles to see how different tasks allocate the context window</p>
+    <div class="slider-bar">${regionsHTML}</div>
+    <div class="preset-buttons">${presetsHTML}</div>
+  `;
+
+  // Wire up preset buttons
+  wrapper.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const preset = SLIDER_PRESETS[btn.dataset.preset];
+      if (preset) applyPreset(wrapper, preset.values);
+      // Toggle active state
+      wrapper.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  return wrapper;
+}
+
+function initSliderDrag(wrapper) {
+  const bar = wrapper.querySelector('.slider-bar');
+  const regions = bar.querySelectorAll('.slider-region');
+
+  // Create handles between regions
+  for (let i = 0; i < regions.length - 1; i++) {
+    const handle = document.createElement('div');
+    handle.className = 'slider-handle';
+    handle.dataset.index = i;
+    bar.appendChild(handle);
+    positionHandle(handle, regions, i);
+
+    handle.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      handle.setPointerCapture(e.pointerId);
+      handle.classList.add('dragging');
+
+      const barRect = bar.getBoundingClientRect();
+      const barWidth = barRect.width;
+      const leftRegion = regions[i];
+      const rightRegion = regions[i + 1];
+      const startX = e.clientX;
+      const startLeftPct = parseFloat(leftRegion.style.width);
+      const startRightPct = parseFloat(rightRegion.style.width);
+
+      // Clear active preset on manual drag
+      wrapper.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+
+      // Disable transitions during drag
+      regions.forEach(r => r.style.transition = 'none');
+
+      const onMove = (ev) => {
+        const dx = ev.clientX - startX;
+        const deltaPct = (dx / barWidth) * 100;
+
+        let newLeft = startLeftPct + deltaPct;
+        let newRight = startRightPct - deltaPct;
+
+        // Clamp to minimum
+        if (newLeft < MIN_REGION_PCT) {
+          newLeft = MIN_REGION_PCT;
+          newRight = startLeftPct + startRightPct - MIN_REGION_PCT;
+        }
+        if (newRight < MIN_REGION_PCT) {
+          newRight = MIN_REGION_PCT;
+          newLeft = startLeftPct + startRightPct - MIN_REGION_PCT;
+        }
+
+        leftRegion.style.width = newLeft + '%';
+        rightRegion.style.width = newRight + '%';
+        leftRegion.querySelector('.region-pct').textContent = Math.round(newLeft) + '%';
+        rightRegion.querySelector('.region-pct').textContent = Math.round(newRight) + '%';
+
+        // Update label visibility
+        updateLabelVisibility(leftRegion);
+        updateLabelVisibility(rightRegion);
+
+        // Reposition all handles
+        for (let j = 0; j < regions.length - 1; j++) {
+          positionHandle(bar.querySelectorAll('.slider-handle')[j], regions, j);
+        }
+      };
+
+      const onUp = () => {
+        handle.classList.remove('dragging');
+        handle.removeEventListener('pointermove', onMove);
+        handle.removeEventListener('pointerup', onUp);
+        // Re-enable transitions
+        regions.forEach(r => r.style.transition = '');
+      };
+
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onUp);
+    });
+  }
+}
+
+function positionHandle(handle, regions, index) {
+  // Position handle at the boundary between region[index] and region[index+1]
+  let leftPct = 0;
+  for (let i = 0; i <= index; i++) {
+    leftPct += parseFloat(regions[i].style.width);
+  }
+  handle.style.left = leftPct + '%';
+}
+
+function updateLabelVisibility(region) {
+  const pct = parseFloat(region.style.width);
+  const label = region.querySelector('.region-label');
+  if (label) {
+    label.style.display = pct < 12 ? 'none' : '';
+  }
+}
+
+function applyPreset(wrapper, values) {
+  const regions = wrapper.querySelectorAll('.slider-region');
+  const handles = wrapper.querySelectorAll('.slider-handle');
+
+  // Re-enable transitions for smooth animation
+  regions.forEach(r => r.style.transition = '');
+
+  regions.forEach((region, i) => {
+    region.style.width = values[i] + '%';
+    region.querySelector('.region-pct').textContent = values[i] + '%';
+    updateLabelVisibility(region);
+  });
+
+  // Reposition handles after transition
+  setTimeout(() => {
+    handles.forEach((handle, i) => {
+      positionHandle(handle, regions, i);
+    });
+  }, 360);
 }
 
 // ===== CHARACTER NAV =====
@@ -325,14 +504,14 @@ async function handleSend() {
       renderConversationNav();
     }
 
-    // Parse Sequita transparency zone
+    // Parse Sequita auditability zone
     if (currentCharacter === 'sequita') {
-      const zoneMatch = response.match(/\[TRANSPARENCY: (high|low)\]/);
+      const zoneMatch = response.match(/\[AUDITABILITY: (high|low)\]/);
       let cleanResponse = response;
       let spectrumHtml = '';
       if (zoneMatch) {
         const zone = zoneMatch[1];
-        cleanResponse = response.replace(/\s*\[TRANSPARENCY: [^\]]+\]\s*/g, '');
+        cleanResponse = response.replace(/\s*\[AUDITABILITY: [^\]]+\]\s*/g, '');
         spectrumHtml = buildSpectrumHTML(zone);
       }
       setBubbleText(cleanResponse + spectrumHtml);
@@ -469,7 +648,7 @@ function buildSpectrumHTML(zone) {
   return `
     <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
       <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; font-weight: bold;">
-        <span>&larr; High Transparency</span><span>Low Transparency &rarr;</span>
+        <span>&larr; High Auditability</span><span>Low Auditability &rarr;</span>
       </div>
       <div style="position: relative; height: 30px; background: linear-gradient(to right, #e74c3c, #27ae60); border-radius: 15px;">
         <div style="position: absolute; left: ${pos}; top: -5px; transform: translateX(-50%);

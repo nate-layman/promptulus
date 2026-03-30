@@ -7,24 +7,24 @@ export const characters = {
     gear: "squirrel_gear.png",
     gearClass: "sequita-gear",
     inputPlaceholder: "Describe a task you're considering using AI for...",
-    greeting: "Hello! I am Sequita. Tell me what you're working on and I'll teach you about transparency. Does your task need a clear paper trail, or is a good answer all that matters? Click the arrow to my right for more information.",
+    greeting: "Hello! I am Sequita. Tell me what you're working on and I'll teach you about auditability. Does your task need a clear paper trail, or is a good answer all that matters? Click the arrow to my right for more information.",
     principlesFile: "task_categorization_principles.md",
     systemPromptFile: "sequita_system_prompt.md",
     ratingIcon: "none",
     sidebarTitle: "About Sequita",
-    sidebarDescription: `<p>Sequita helps you determine whether <strong>transparency</strong> matters for your task.</p>
+    sidebarDescription: `<p>Sequita helps you determine whether <strong>auditability</strong> matters for your task.</p>
       <p>The key question: <em>Do you need to understand the cause, or just the effect?</em></p>
       <p>Think of it like forecasting: sometimes you need to know <em>why</em> a prediction was right: what assumptions were made, whether the reasoning holds for new situations. Other times you just need an accurate forecast and the inner workings don't matter.</p>
       <p>Type your task description, click Send, and the squirrel will:</p>
       <ul>
-        <li>Assess whether your task needs high or low transparency</li>
+        <li>Assess whether your task needs high or low auditability</li>
         <li>Explain what that means for choosing tools and methods</li>
       </ul>
-      <p>Describe different tasks to explore how transparency needs change across your work.</p>`,
+      <p>Describe different tasks to explore how auditability needs change across your work.</p>`,
     active: true,
     phase: "before",
     skillLabel: "Should I use AI?",
-    skillDescription: "Transparency: Some tasks need a clear paper trail; others just need a good answer. Knowing the difference keeps you out of trouble.",
+    skillDescription: "Auditability: Some tasks need a clear paper trail; others just need a good answer. Knowing the difference keeps you out of trouble.",
     nameOrigin: "From Latin 'sequi' (to follow/trace), tracing the reasoning behind a result"
   },
   modulus: {

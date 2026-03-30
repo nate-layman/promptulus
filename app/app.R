@@ -31,26 +31,26 @@ character_config <- list(
     gear = "squirrel_gear.png",
     gear_class = "sequita-gear",
     input_placeholder = "Describe a task you're considering using AI for...",
-    greeting = "Hello! I am Sequita. Tell me what you're working on and I'll teach you about transparency. Does your task need a clear paper trail, or is a good answer all that matters? Click the arrow to my right for more information.",
+    greeting = "Hello! I am Sequita. Tell me what you're working on and I'll teach you about auditability. Does your task need a clear paper trail, or is a good answer all that matters? Click the arrow to my right for more information.",
     principles_file = "task_categorization_principles.md",
     system_prompt_file = "sequita_system_prompt.md",
     rating_icon = "none",
     sidebar_title = "About Sequita",
     sidebar_description = HTML(
-      "<p>Sequita helps you determine whether <strong>transparency</strong> matters for your task.</p>
+      "<p>Sequita helps you determine whether <strong>auditability</strong> matters for your task.</p>
       <p>The key question: <em>Do you need to understand the cause, or just the effect?</em></p>
       <p>Think of it like forecasting: sometimes you need to know <em>why</em> a prediction was right: what assumptions were made, whether the reasoning holds for new situations. Other times you just need an accurate forecast and the inner workings don't matter.</p>
       <p>Type your task description, click Send, and the squirrel will:</p>
       <ul>
-        <li>Assess whether your task needs high or low transparency</li>
+        <li>Assess whether your task needs high or low auditability</li>
         <li>Explain what that means for choosing tools and methods</li>
       </ul>
-      <p>Describe different tasks to explore how transparency needs change across your work.</p>"
+      <p>Describe different tasks to explore how auditability needs change across your work.</p>"
     ),
     active = TRUE,
     phase = "before",
     skill_label = "Should I use AI?",
-    skill_description = "Transparency: Some tasks need a clear paper trail; others just need a good answer. Knowing the difference keeps you out of trouble.",
+    skill_description = "Auditability: Some tasks need a clear paper trail; others just need a good answer. Knowing the difference keeps you out of trouble.",
     name_origin = "From Latin 'sequi' (to follow/trace), tracing the reasoning behind a result"
   ),
   modulus = list(
@@ -305,7 +305,7 @@ spectrum_html <- function(zone) {
   paste0(
     '<div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">',
     '<div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; font-weight: bold;">',
-    '<span>&larr; High Transparency</span><span>Low Transparency &rarr;</span></div>',
+    '<span>&larr; High Auditability</span><span>Low Auditability &rarr;</span></div>',
     '<div style="position: relative; height: 30px; background: linear-gradient(to right, #e74c3c, #27ae60); border-radius: 15px;">',
     '<div style="position: absolute; left: ', pos, '; top: -5px; transform: translateX(-50%); ',
     'width: 20px; height: 40px; background: white; border: 3px solid #333; border-radius: 50%;"></div>',
@@ -989,7 +989,7 @@ ui <- page_sidebar(
           " They'll do anything you ask without pushing back, even if your instructions are vague or your request doesn't quite make sense.",
           " They won't tell you when they're guessing, and they'll never say \"I don't know.\"",
           " Using AI well means learning to manage that employee: giving clear direction, providing the right reference materials,",
-          " and always checking their work. My 8 companions each teach one of these skills."
+          " and always checking their work. My companions each teach one of these skills."
         )
       ),
 
@@ -1035,7 +1035,7 @@ ui <- page_sidebar(
       # Using AI
       div(class = "phase-section",
         div(class = "phase-title", "Using AI: Intent, Instructions, Information, Interaction"),
-        p(class = "phase-description", "Intent, instructions, information, and interaction all compete for the model's attention. Getting the balance right between these four is what separates useful AI output from noise."),
+        p(class = "phase-description", "Intent, instructions, information, and interaction all compete for the model's attention, which is called the 'context window'. Getting the balance right between these four is what separates useful AI output from noise."),
         div(class = "character-cards",
           lapply(names(character_config)[sapply(character_config, function(x) x$phase == "during")], function(char_id) {
             cfg <- character_config[[char_id]]
@@ -1594,11 +1594,11 @@ server <- function(input, output, session) {
 
         # For Sequita: parse zone and append spectrum visualization
         if (selected_character() == "sequita") {
-          zone_match <- regmatches(response, regexpr("\\[TRANSPARENCY: (high|low)\\]", response))
+          zone_match <- regmatches(response, regexpr("\\[AUDITABILITY: (high|low)\\]", response))
           zone <- NULL
           if (length(zone_match) > 0) {
-            zone <- gsub("\\[TRANSPARENCY: |\\]", "", zone_match[1])
-            response <- gsub("\\s*\\[TRANSPARENCY: [^]]+\\]\\s*", "", response)
+            zone <- gsub("\\[AUDITABILITY: |\\]", "", zone_match[1])
+            response <- gsub("\\s*\\[AUDITABILITY: [^]]+\\]\\s*", "", response)
           }
           owl_text(paste0(response, if (!is.null(zone)) spectrum_html(zone) else ""))
         } else {
