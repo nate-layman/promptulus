@@ -198,7 +198,38 @@ character_config <- list(
     skill_description = "Interaction: Every exchange shapes what the model remembers. Knowing when to continue, reset, or restructure keeps your AI sharp instead of confused.",
     name_origin = "From Greek 'dialogos' (\u03b4\u03b9\u03ac\u03bb\u03bf\u03b3\u03bf\u03c2), meaning conversation, dialogue"
   ),
-  # --- AFTER AI (Quality) ---
+  # --- AFTER AI (Quality & Understanding) ---
+  vitrea = list(
+    name = "Vitrea",
+    display_name = "Vitrea (AI Transparency)",
+    image = "frog.png",
+    gear = NULL,
+    gear_class = NULL,
+    input_placeholder = "Ask me about how AI models work, environmental impact, data privacy, or anything else you're curious about...",
+    greeting = "Hello! I am Vitrea. Ask me about how AI models actually work - tokenization, prediction, environmental impact, where your data goes, or anything else you're curious about. I'll explain it in plain language. Click the arrow to my right for more information.",
+    principles_file = "ai_transparency_principles.md",
+    system_prompt_file = "vitrea_system_prompt.md",
+    rating_icon = "none",
+    sidebar_title = "About Vitrea",
+    sidebar_description = HTML(
+      "<p>Vitrea helps you understand <strong>how AI actually works</strong> under the hood.</p>
+      <p>The key insight: you don't need to be an engineer, but you should know enough to make informed decisions about when and how to use AI.</p>
+      <p>Ask Vitrea about any topic and the glass frog will explain it clearly:</p>
+      <ul>
+        <li>How models turn text into tokens and predict responses</li>
+        <li>Why AI can sound confident while being completely wrong</li>
+        <li>Where your data goes when you use AI tools</li>
+        <li>The environmental impact of AI use</li>
+        <li>Open vs closed models, bias, and reasoning</li>
+      </ul>
+      <p>Ask whatever you're curious about - Vitrea will point you to resources for deeper exploration.</p>"
+    ),
+    active = TRUE,
+    phase = "after",
+    skill_label = "How does AI actually work?",
+    skill_description = "Transparency: You don't need to be an engineer, but you should understand enough about how AI works to make good decisions about when and how to use it.",
+    name_origin = "From Latin 'vitreus' (glass, transparent), seeing clearly through to the inner workings"
+  ),
   veridex = list(
     name = "Veridex",
     display_name = "Veridex (Evaluation)",

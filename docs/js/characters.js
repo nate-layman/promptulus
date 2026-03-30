@@ -161,6 +161,35 @@ export const characters = {
     skillDescription: "Interaction: Every exchange shapes what the model remembers. Knowing when to continue, reset, or restructure keeps your AI sharp instead of confused.",
     nameOrigin: "From Greek 'dialogos' (\u03b4\u03b9\u03ac\u03bb\u03bf\u03b3\u03bf\u03c2), meaning conversation, dialogue"
   },
+  vitrea: {
+    name: "Vitrea",
+    displayName: "Vitrea (AI Transparency)",
+    image: "frog.png",
+    gear: null,
+    gearClass: null,
+    inputPlaceholder: "Ask me about how AI models work, environmental impact, data privacy, or anything else you're curious about...",
+    greeting: "Hello! I am Vitrea. Ask me about how AI models actually work - tokenization, prediction, environmental impact, where your data goes, or anything else you're curious about. I'll explain it in plain language. Click the arrow to my right for more information.",
+    principlesFile: "ai_transparency_principles.md",
+    systemPromptFile: "vitrea_system_prompt.md",
+    ratingIcon: "none",
+    sidebarTitle: "About Vitrea",
+    sidebarDescription: `<p>Vitrea helps you understand <strong>how AI actually works</strong> under the hood.</p>
+      <p>The key insight: you don't need to be an engineer, but you should know enough to make informed decisions about when and how to use AI.</p>
+      <p>Ask Vitrea about any topic and the glass frog will explain it clearly:</p>
+      <ul>
+        <li>How models turn text into tokens and predict responses</li>
+        <li>Why AI can sound confident while being completely wrong</li>
+        <li>Where your data goes when you use AI tools</li>
+        <li>The environmental impact of AI use</li>
+        <li>Open vs closed models, bias, and reasoning</li>
+      </ul>
+      <p>Ask whatever you're curious about - Vitrea will point you to resources for deeper exploration.</p>`,
+    active: true,
+    phase: "after",
+    skillLabel: "How does AI actually work?",
+    skillDescription: "Transparency: You don't need to be an engineer, but you should understand enough about how AI works to make good decisions about when and how to use it.",
+    nameOrigin: "From Latin 'vitreus' (glass, transparent), seeing clearly through to the inner workings"
+  },
   veridex: {
     name: "Veridex",
     displayName: "Veridex (Evaluation)",
