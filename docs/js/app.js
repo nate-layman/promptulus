@@ -140,7 +140,7 @@ function buildContextSlider() {
   const wrapper = document.createElement('div');
   wrapper.className = 'context-slider-section';
 
-  const widths = [25, 25, 25, 25];
+  const widths = [5, 40, 10, 45];
 
   // Build regions HTML
   const regionsHTML = SLIDER_REGIONS.map((r, i) =>
