@@ -14,9 +14,16 @@ const $ = (id) => document.getElementById(id);
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
-  // Modal
+  // Modals
   $('dismiss-modal').addEventListener('click', () => {
     $('welcome-modal').style.display = 'none';
+  });
+  $('open-apikey-help').addEventListener('click', (e) => {
+    e.preventDefault();
+    $('apikey-modal').style.display = '';
+  });
+  $('dismiss-apikey-modal').addEventListener('click', () => {
+    $('apikey-modal').style.display = 'none';
   });
 
   // API key input

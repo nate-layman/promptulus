@@ -15,8 +15,24 @@
     <h2>Welcome to the AI Literacy Companions</h2>
     <p>This project is designed to teach you how to <em>think about</em> using AI. Each character highlights an important discipline in the AI workflow.</p>
     <p>The advice from any individual character is educational. It should not be used to make definitive judgments about specific tasks. Always consult your institution's policies and use professional judgment.</p>
-    <p><strong>Do not submit sensitive, confidential, or personally identifiable information.</strong> Your inputs are sent to a third-party AI service (Google Gemini) for processing. Use generic or anonymized examples when describing your tasks.</p>
+    <p><strong>Do not submit sensitive, confidential, or personally identifiable information</strong> unless your institution has an enterprise or data privacy agreement in place with Google. Your inputs are sent to a third-party AI service (Google Gemini) for processing. When in doubt, use generic or anonymized examples when describing your tasks.</p>
     <button class="btn-primary" id="dismiss-modal">I understand</button>
+  </div>
+</div>
+
+<!-- API Key Help Modal -->
+<div id="apikey-modal" class="modal-overlay" style="display: none;">
+  <div class="modal-dialog">
+    <h2>How to Get a Gemini API Key</h2>
+    <p>The AI Literacy Companions use Google's Gemini API to power the interactive characters. You'll need a free API key to get started.</p>
+    <ol style="line-height: 1.8; color: #333; padding-left: 1.2em;">
+      <li>Visit <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> and sign in with your Google account.</li>
+      <li>Click <strong>Create API Key</strong> and select a Google Cloud project (or let it create one for you).</li>
+      <li>Copy the generated key and paste it into the input field on this page.</li>
+    </ol>
+    <p>The free tier is generous for personal and educational use. Your key is stored only in your browser's memory for the current session - it is never saved or sent anywhere except directly to Google's API.</p>
+    <p><strong>Workshop facilitators:</strong> You can pre-fill everyone's key by sharing a link with <code>?key=YOUR_KEY</code> appended. The key is stripped from the URL after loading.</p>
+    <button class="btn-primary" id="dismiss-apikey-modal">Got it</button>
   </div>
 </div>
 
@@ -56,7 +72,7 @@
         <span id="api-key-status"></span>
       </div>
       <p class="api-key-help">
-        Don't have a key? <a href="https://aistudio.google.com/apikey" target="_blank">Click here for instructions on getting a free Gemini API key</a>.
+        Don't have a key? <a href="#" id="open-apikey-help">Click here for instructions on getting a free Gemini API key</a>.
       </p>
     </div>
 
