@@ -38,4 +38,4 @@ tmp/
 temp/
 
 .claude/**
-.DS_Store
+**/.DS_Store
