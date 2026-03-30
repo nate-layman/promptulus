@@ -29,11 +29,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (key) initAPI(key);
   });
 
-  // URL parameter for API key
+  // URL parameter for API key (for workshop setup - strip from URL after reading)
   const params = new URLSearchParams(window.location.search);
   if (params.get('key')) {
     apiKeyInput.value = params.get('key');
     apiKeyInput.dispatchEvent(new Event('input'));
+    // Remove key from URL to prevent exposure in browser history/bookmarks
+    const cleanUrl = new URL(window.location);
+    cleanUrl.searchParams.delete('key');
+    window.history.replaceState({}, '', cleanUrl);
   }
 
   // Build landing page phase sections
@@ -153,7 +157,8 @@ function buildContextSlider() {
 
   wrapper.innerHTML = `
     <h4>The Context Window</h4>
-    <p class="slider-subtitle">Drag the handles to see how different tasks allocate the context window</p>
+    <p class="slider-subtitle">While context windows are growing, balance still matters: models pay less attention to information buried in the middle of a long context, and more tokens mean higher cost and slower responses. It's not about how much fits - it's about what gets focus.</p>
+    <p class="slider-subtitle">Drag the handles to see how you might allocate the context window for different tasks.</p>
     <div class="slider-bar">${regionsHTML}</div>
     <div class="preset-buttons">${presetsHTML}</div>
   `;
