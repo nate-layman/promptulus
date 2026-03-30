@@ -128,10 +128,10 @@ const SLIDER_REGIONS = [
 ];
 
 const SLIDER_PRESETS = {
-  compliance:  { label: 'Compliance review',  values: [40, 30, 20, 10] },
-  draft:       { label: 'Draft a description', values: [10, 50, 25, 15] },
-  iterative:   { label: 'Iterative editing',   values: [10, 20, 15, 55] },
-  scoping:     { label: 'New task scoping',     values: [50, 20, 15, 15] }
+  compliance:  { label: 'Compliance review',  values: [10, 50, 25, 15] },
+  draft:       { label: 'Draft a description', values: [10, 40, 35, 15] },
+  iterative:   { label: 'Iterative editing',   values: [5, 15, 20, 60] },
+  scoping:     { label: 'New task scoping',     values: [20, 25, 25, 30] }
 };
 
 const MIN_REGION_PCT = 5;
