@@ -213,7 +213,7 @@ export const characters = {
     active: true,
     phase: "after",
     skillLabel: "Can I explain what I did?",
-    skillDescription: "Accountability: Documenting what you did and why protects you. If something goes wrong but you followed guidelines and recorded your process, you have a paper trail showing due diligence.",
+    skillDescription: "Accountability: Documenting what you did and why protects you. If something goes wrong but you followed guidelines and recorded your process, you have a paper trail showing due diligence. Clarion teaches the white whale of AI skills: documenting what you've done well enough that your work can be reproduced.",
     nameOrigin: "From Latin 'clarus' (clear) + clarion (a trumpet), broadcasting findings so they can't be missed"
   }
 };
